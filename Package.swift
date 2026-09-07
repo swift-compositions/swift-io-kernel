@@ -87,10 +87,6 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-memory-heap.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
             branch: "main"
         ),
@@ -170,10 +166,7 @@ let package = Package(
                     name: "Hash Indexed Primitive",
                     package: "swift-hash-table"
                 ),
-                .product(
-                    name: "Hash Tagged",
-                    package: "swift-hash"
-                ),
+                .product(name: "Hash", package: "swift-hash"),
                 .product(
                     name: "Buffer Primitive",
                     package: "swift-buffer"
@@ -191,7 +184,6 @@ let package = Package(
                     name: "Storage Contiguous",
                     package: "swift-storage"
                 ),
-                .product(name: "Memory Heap", package: "swift-memory-heap"),
                 .product(
                     name: "Memory Allocator Primitive",
                     package: "swift-memory-allocation"
