@@ -1,11 +1,11 @@
 #if !os(Windows)
 
-    public import IO_Completions
+    public import IO_Kernel_Completions
     public import Kernel_Completion
 
-    extension IO where Capabilities == Basic.Capabilities {
+    extension IO.Kernel where Capabilities == Basic.Capabilities {
 
-        public static func completions(on actor: Completion.Actor) -> IO<Basic.Capabilities> {
+        public static func completions(on actor: Completion.Actor) -> IO.Kernel<Basic.Capabilities> {
             let capabilities = Basic.Capabilities(
                 read: { fd, buf throws(Basic.Error) -> Int in
                     do throws(Completion.Failure) {
@@ -38,10 +38,10 @@
 
                 }
             )
-            return IO(capabilities: capabilities, runner: runner)
+            return IO.Kernel(capabilities: capabilities, runner: runner)
         }
 
-        public static func completions() throws(Kernel.Completion.Error) -> IO<Basic.Capabilities> {
+        public static func completions() throws(Kernel::Kernel.Completion.Error) -> IO.Kernel<Basic.Capabilities> {
             completions(on: try Completion.Actor.shared())
         }
     }

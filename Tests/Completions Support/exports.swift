@@ -1,2 +1,2 @@
-@_exported public import IO_Completions
-@_exported public import IO_Test_Support
+@_exported public import IO_Kernel_Completions
+@_exported public import IO_Kernel_Test_Support

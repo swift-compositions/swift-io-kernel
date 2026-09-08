@@ -1,9 +1,9 @@
 #if !os(Windows)
 
-    public import IO
+    public import IO_Kernel
     public import Kernel
     public import Memory
-    public import Span_Raw
+    public import Span_Byte
 
     extension Completion.Actor {
 

@@ -1,6 +1,6 @@
 #if !os(Windows)
 
-    public import IO_Events
+    public import IO_Kernel_Events
 
     extension Event.Failure {
 

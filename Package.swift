@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-io",
+    name: "swift-io-kernel",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -13,33 +13,35 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "IO",
-            targets: ["IO"]
+            name: "IO Kernel",
+            targets: ["IO Kernel"]
         ),
         .library(
-            name: "IO Events",
-            targets: ["IO Events"]
+            name: "IO Kernel Events",
+            targets: ["IO Kernel Events"]
         ),
         .library(
-            name: "IO Completions",
-            targets: ["IO Completions"]
+            name: "IO Kernel Completions",
+            targets: ["IO Kernel Completions"]
         ),
         .library(
-            name: "IO Test Support",
-            targets: ["IO Test Support"]
+            name: "IO Kernel Test Support",
+            targets: ["IO Kernel Test Support"]
         ),
         .library(
-            name: "IO Completions Test Support",
-            targets: ["IO Completions Test Support"]
+            name: "IO Kernel Completions Test Support",
+            targets: ["IO Kernel Completions Test Support"]
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-molecules/swift-async-channel.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-storage-memory.git", branch: "main"),
         .package(
             url: "https://github.com/swift-compositions/swift-kernel.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-compositions/swift-async.git",
+            url: "https://github.com/swift-atoms/swift-async.git",
             branch: "main"
         ),
         .package(
@@ -55,11 +57,11 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-io.git",
+            url: "https://github.com/swift-atoms/swift-io.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-buffer.git",
+            url: "https://github.com/swift-atoms/swift-buffer.git",
             branch: "main"
         ),
         .package(
@@ -83,7 +85,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-storage.git",
+            url: "https://github.com/swift-atoms/swift-storage.git",
             branch: "main"
         ),
         .package(
@@ -95,7 +97,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-span.git",
+            url: "https://github.com/swift-molecules/swift-span-byte.git",
             branch: "main"
         ),
         .package(
@@ -114,12 +116,13 @@ let package = Package(
     targets: [
 
         .target(
-            name: "IO Events",
+            name: "IO Kernel Events",
             dependencies: [
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "IO", package: "swift-io"),
                 .product(name: "Executors", package: "swift-executors"),
-                .product(name: "Async", package: "swift-async"),
+                .product(name: "Async Lifecycle", package: "swift-async"),
+                .product(name: "Async Channel", package: "swift-async-channel"),
                 .product(name: "Hash", package: "swift-hash"),
                 .product(name: "Heap Primitive", package: "swift-heap"),
                 .product(name: "Buffer", package: "swift-buffer"),
@@ -132,7 +135,7 @@ let package = Package(
         ),
 
         .target(
-            name: "IO Completions",
+            name: "IO Kernel Completions",
             dependencies: [
                 .product(
                     name: "Kernel",
@@ -151,10 +154,6 @@ let package = Package(
                     package: "swift-executors"
                 ),
                 .product(
-                    name: "Async",
-                    package: "swift-async"
-                ),
-                .product(
                     name: "Memory",
                     package: "swift-memory"
                 ),
@@ -168,7 +167,7 @@ let package = Package(
                 ),
                 .product(name: "Hash", package: "swift-hash"),
                 .product(
-                    name: "Buffer Primitive",
+                    name: "Buffer",
                     package: "swift-buffer"
                 ),
                 .product(
@@ -179,13 +178,13 @@ let package = Package(
                     name: "Buffer Linear",
                     package: "swift-buffer-linear"
                 ),
-                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Storage", package: "swift-storage"),
                 .product(
-                    name: "Storage Contiguous",
-                    package: "swift-storage"
+                    name: "Storage Memory",
+                    package: "swift-storage-memory"
                 ),
                 .product(
-                    name: "Memory Allocator Primitive",
+                    name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Synchronizer Blocking", package: "swift-synchronizers"),
@@ -193,10 +192,10 @@ let package = Package(
         ),
 
         .target(
-            name: "IO",
+            name: "IO Kernel",
             dependencies: [
-                "IO Events",
-                "IO Completions",
+                "IO Kernel Events",
+                "IO Kernel Completions",
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "IO", package: "swift-io"),
                 .product(name: "Either", package: "swift-either"),
@@ -204,10 +203,10 @@ let package = Package(
         ),
 
         .target(
-            name: "IO Test Support",
+            name: "IO Kernel Test Support",
             dependencies: [
-                .product(name: "Span Raw", package: "swift-span"),
-                "IO",
+                .product(name: "Span Byte", package: "swift-span-byte"),
+                "IO Kernel",
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "Kernel Test Support", package: "swift-kernel"),
                 .product(name: "IO", package: "swift-io"),
@@ -220,42 +219,43 @@ let package = Package(
         ),
 
         .target(
-            name: "IO Completions Test Support",
+            name: "IO Kernel Completions Test Support",
             dependencies: [
-                "IO Completions",
-                "IO Events",
-                "IO Test Support",
+                "IO Kernel Completions",
+                "IO Kernel Events",
+                "IO Kernel Test Support",
                 .product(name: "Synchronizer Blocking", package: "swift-synchronizers"),
             ],
             path: "Tests/Completions Support"
         ),
 
         .testTarget(
-            name: "IO Basic Tests",
+            name: "IO Kernel Blocking Tests",
             dependencies: [
-                "IO Test Support"
+                "IO Kernel Test Support"
             ],
-            path: "Tests/IO Blocking Tests"
+            path: "Tests/IO Kernel Blocking Tests"
         ),
         .testTarget(
-            name: "IO Completions Tests",
+            name: "IO Kernel Completions Tests",
             dependencies: [
-                "IO Completions",
-                "IO Completions Test Support",
+                "IO Kernel Completions",
+                "IO Kernel Completions Test Support",
             ]
         ),
         .testTarget(
-            name: "IO Tests",
+            name: "IO Kernel Tests",
             dependencies: [
-                "IO",
-                "IO Test Support",
+                "IO Kernel",
+                "IO Kernel Test Support",
             ]
         ),
         .testTarget(
-            name: "IO Events Tests",
+            name: "IO Kernel Events Tests",
             dependencies: [
-                "IO Events",
-                "IO Test Support",
+                .product(name: "Async Channel", package: "swift-async-channel"),
+                "IO Kernel Events",
+                "IO Kernel Test Support",
             ]
         )
     ]

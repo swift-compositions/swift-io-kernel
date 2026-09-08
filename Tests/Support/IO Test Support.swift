@@ -1,1 +1,1 @@
-@_exported public import IO
+@_exported public import IO_Kernel

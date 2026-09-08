@@ -1,4 +1,4 @@
-public import Span_Raw
+public import Span_Byte
 
 extension Kernel.Thread.Actor {
 

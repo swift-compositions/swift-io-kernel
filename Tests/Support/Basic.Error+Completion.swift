@@ -1,6 +1,6 @@
 #if !os(Windows)
 
-    public import IO_Completions
+    public import IO_Kernel_Completions
 
     extension Completion.Failure {
 
@@ -17,7 +17,7 @@
                 return .platform(.POSIX.EMFILE)
 
             case .platform(let code):
-                if code == Error.Error.Code.POSIX.EPIPE { return .brokenPipe }
+                if code == Error::Error.Code.POSIX.EPIPE { return .brokenPipe }
                 return .platform(code)
 
             case .kernel:

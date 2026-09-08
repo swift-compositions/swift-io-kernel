@@ -1,8 +1,8 @@
 #if !os(Windows)
 
-    public import IO
+    public import IO_Kernel
     @_spi(Syscall) public import Kernel
-    public import Span_Raw
+    public import Span_Byte
 
     extension Event.Actor {
 

@@ -1,10 +1,10 @@
-public import Span_Raw
+public import Span_Byte
 
-extension IO where Capabilities == Basic.Capabilities {
+extension IO.Kernel where Capabilities == Basic.Capabilities {
 
     @inlinable
     public func read(
-        from fd: borrowing Kernel.Descriptor,
+        from fd: borrowing Kernel::Kernel.Descriptor,
         into buffer: Span.Raw.Mutable
     ) async throws(Basic.Error) -> Int {
         try await capabilities.read(fd, buffer)
@@ -12,21 +12,21 @@ extension IO where Capabilities == Basic.Capabilities {
 
     @inlinable
     public func write(
-        to fd: borrowing Kernel.Descriptor,
+        to fd: borrowing Kernel::Kernel.Descriptor,
         from buffer: Span.Raw
     ) async throws(Basic.Error) -> Int {
         try await capabilities.write(fd, buffer)
     }
 
     @inlinable
-    public func close(_ fd: consuming Kernel.Descriptor) async {
+    public func close(_ fd: consuming Kernel::Kernel.Descriptor) async {
         await capabilities.close(consume fd)
     }
 
     @inlinable
     public func ready(
-        from fd: borrowing Kernel.Descriptor,
-        interest: Kernel.Event.Interest
+        from fd: borrowing Kernel::Kernel.Descriptor,
+        interest: Kernel::Kernel.Event.Interest
     ) async throws(Basic.Error) {
         try await capabilities.ready(fd, interest)
     }

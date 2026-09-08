@@ -1,13 +1,13 @@
 public import Executors
 
-extension IO where Capabilities == Basic.Capabilities {
+extension IO.Kernel where Capabilities == Basic.Capabilities {
 
-    public static func blocking() -> IO<Basic.Capabilities> {
+    public static func blocking() -> IO.Kernel<Basic.Capabilities> {
         blocking(on: Basic._sharedBlockingExecutors.next())
     }
 
-    public static func blocking(on executor: Kernel.Thread.Executor) -> IO<Basic.Capabilities> {
-        let actor = Kernel.Thread.Actor(executor: executor)
+    public static func blocking(on executor: Kernel::Kernel.Thread.Executor) -> IO.Kernel<Basic.Capabilities> {
+        let actor = Kernel::Kernel.Thread.Actor(executor: executor)
         let capabilities = Basic.Capabilities(
             read: { fd, buf throws(Basic.Error) -> Int in
                 try await actor.read(from: fd, into: buf)
@@ -28,12 +28,12 @@ extension IO where Capabilities == Basic.Capabilities {
 
             }
         )
-        return IO(capabilities: capabilities, runner: runner)
+        return IO.Kernel(capabilities: capabilities, runner: runner)
     }
 }
 
 extension Basic {
 
     @usableFromInline
-    internal static let _sharedBlockingExecutors: Kernel.Thread.Executor.Sharded = .init()
+    internal static let _sharedBlockingExecutors: Kernel::Kernel.Thread.Executor.Sharded = .init()
 }
