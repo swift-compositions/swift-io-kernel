@@ -6,7 +6,6 @@
     import Memory
     import Dictionary
     import Hash_Indexed_Primitive
-    import Hash
     import Buffer
     import Buffer_Linear_Primitive
     import Buffer_Linear

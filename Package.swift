@@ -65,10 +65,6 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-hash.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-molecules/swift-heap.git",
             branch: "main"
         ),
@@ -123,7 +119,6 @@ let package = Package(
                 .product(name: "Executors", package: "swift-executors"),
                 .product(name: "Async Lifecycle", package: "swift-async"),
                 .product(name: "Async Channel", package: "swift-async-channel"),
-                .product(name: "Hash", package: "swift-hash"),
                 .product(name: "Heap Primitive", package: "swift-heap"),
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(name: "Memory", package: "swift-memory"),
@@ -165,7 +160,6 @@ let package = Package(
                     name: "Hash Indexed Primitive",
                     package: "swift-hash-table"
                 ),
-                .product(name: "Hash", package: "swift-hash"),
                 .product(
                     name: "Buffer",
                     package: "swift-buffer"
