@@ -2,7 +2,7 @@ import Executors
 import IO_Kernel_Test_Support
 import Kernel
 import Memory
-import Span_Byte
+import Span
 import Synchronization
 import Testing
 

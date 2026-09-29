@@ -4,7 +4,7 @@
     import IO_Kernel_Completions_Test_Support
     @_spi(Syscall) import Kernel
     import Memory
-    import Span_Byte
+    import Span
 
     enum ProactorWitnessTests {
         @Suite(

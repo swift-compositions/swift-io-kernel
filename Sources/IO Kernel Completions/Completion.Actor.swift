@@ -10,7 +10,6 @@
     import Buffer_Linear_Primitive
     import Buffer_Linear
     import Storage
-    import Storage_Memory
     import Memory_Allocator
 
     extension Completion {

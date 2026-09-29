@@ -1,6 +1,6 @@
 import IO_Kernel_Test_Support
 import Memory
-import Span_Byte
+import Span
 import Testing
 
 @Suite(.timeLimit(.minutes(1)))

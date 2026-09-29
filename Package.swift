@@ -35,7 +35,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-molecules/swift-async-channel.git", branch: "main"),
-        .package(url: "https://github.com/swift-molecules/swift-storage-memory.git", branch: "main"),
         .package(
             url: "https://github.com/swift-compositions/swift-kernel.git",
             branch: "main"
@@ -65,7 +64,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-heap.git",
+            url: "https://github.com/swift-atoms/swift-heap.git",
             branch: "main"
         ),
         .package(
@@ -82,32 +81,28 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
-            branch: "main"
-        ),
+            branch: "main", traits: ["Generational", "Memory"]),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-memory.git",
+            url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-span-byte.git",
+            url: "https://github.com/swift-atoms/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-either.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-witness.git",
+            url: "https://github.com/swift-atoms/swift-witness.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-compositions/swift-witnesses.git",
             branch: "main"
         ),
+        .package(url: "https://github.com/swift-atoms/swift-span.git", branch: "main", traits: ["Byte"]),
     ],
     targets: [
 
@@ -174,10 +169,6 @@ let package = Package(
                 ),
                 .product(name: "Storage", package: "swift-storage"),
                 .product(
-                    name: "Storage Memory",
-                    package: "swift-storage-memory"
-                ),
-                .product(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
@@ -199,7 +190,6 @@ let package = Package(
         .target(
             name: "IO Kernel Test Support",
             dependencies: [
-                .product(name: "Span Byte", package: "swift-span-byte"),
                 "IO Kernel",
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "Kernel Test Support", package: "swift-kernel"),
@@ -208,6 +198,7 @@ let package = Package(
                 .product(name: "Executors", package: "swift-executors"),
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(name: "Memory", package: "swift-memory"),
+                .product(name: "Span", package: "swift-span"),
             ],
             path: "Tests/Support"
         ),
@@ -226,7 +217,8 @@ let package = Package(
         .testTarget(
             name: "IO Kernel Blocking Tests",
             dependencies: [
-                "IO Kernel Test Support"
+                "IO Kernel Test Support",
+                .product(name: "Span", package: "swift-span"),
             ],
             path: "Tests/IO Kernel Blocking Tests"
         ),
@@ -235,6 +227,7 @@ let package = Package(
             dependencies: [
                 "IO Kernel Completions",
                 "IO Kernel Completions Test Support",
+                .product(name: "Span", package: "swift-span"),
             ]
         ),
         .testTarget(
@@ -242,6 +235,7 @@ let package = Package(
             dependencies: [
                 "IO Kernel",
                 "IO Kernel Test Support",
+                .product(name: "Span", package: "swift-span"),
             ]
         ),
         .testTarget(
@@ -250,6 +244,7 @@ let package = Package(
                 .product(name: "Async Channel", package: "swift-async-channel"),
                 "IO Kernel Events",
                 "IO Kernel Test Support",
+                .product(name: "Span", package: "swift-span"),
             ]
         )
     ]

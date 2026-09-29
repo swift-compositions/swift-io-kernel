@@ -2,7 +2,7 @@
 
     public import IO_Kernel
     @_spi(Syscall) public import Kernel
-    public import Span_Byte
+    public import Span
 
     extension Event.Actor {
 

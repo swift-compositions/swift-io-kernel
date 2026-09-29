@@ -1,7 +1,7 @@
 import IO_Kernel_Test_Support
 @_spi(Syscall) import Kernel
 import Memory
-import Span_Byte
+import Span
 import Testing
 
 extension Event.Actor {

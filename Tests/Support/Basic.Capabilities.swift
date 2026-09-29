@@ -1,4 +1,4 @@
-public import Span_Byte
+public import Span
 
 extension Basic {
 
