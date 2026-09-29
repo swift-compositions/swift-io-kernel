@@ -56,7 +56,7 @@
 
     extension Completion.Actor {
 
-        private typealias Registry = Dictionary.Dictionary<
+        private typealias Registry = Dictionary::Dictionary<
             Kernel.Completion.Token, Completion.Entry
         >
     }

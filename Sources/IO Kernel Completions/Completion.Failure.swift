@@ -27,7 +27,7 @@
         }
     }
 
-    extension Error.Error {
+    extension Error::Error {
 
         public var completionFailure: Completion.Failure {
             .platform(self.code)
