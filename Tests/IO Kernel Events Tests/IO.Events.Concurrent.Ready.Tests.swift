@@ -31,7 +31,7 @@ extension Event.Actor.`Concurrent Ready` {
         let one = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe one.deallocate() }
         unsafe one[0] = 0x42
-        _ = try await io.write(
+        _ = unsafe try await io.write(
             to: pipe.write,
             from: unsafe .init(UnsafeRawBufferPointer(one))
         )
@@ -60,23 +60,23 @@ extension Event.Actor.`Concurrent Ready` {
         defer { unsafe one.deallocate() }
 
         unsafe one[0] = 0x01
-        _ = try await io.write(
+        _ = unsafe try await io.write(
             to: pipe.write,
             from: unsafe .init(UnsafeRawBufferPointer(one))
         )
         try await io.ready(from: pipe.read, interest: .read)
-        _ = try await io.read(
+        _ = unsafe try await io.read(
             from: pipe.read,
             into: unsafe .init(one)
         )
 
         unsafe one[0] = 0x02
-        _ = try await io.write(
+        _ = unsafe try await io.write(
             to: pipe.write,
             from: unsafe .init(UnsafeRawBufferPointer(one))
         )
         try await io.ready(from: pipe.read, interest: .read)
-        _ = try await io.read(
+        _ = unsafe try await io.read(
             from: pipe.read,
             into: unsafe .init(one)
         )

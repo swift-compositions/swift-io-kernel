@@ -35,7 +35,7 @@ extension Event.Actor.Test {
         for (i, byte) in payload.enumerated() { unsafe writePtr[i] = byte }
         let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
 
-        _ = try await io.write(to: pipe.write, from: writeBuffer)
+        _ = unsafe try await io.write(to: pipe.write, from: writeBuffer)
 
         let readPtr = UnsafeMutableRawBufferPointer.allocate(
             byteCount: 1024,
@@ -44,7 +44,7 @@ extension Event.Actor.Test {
         defer { unsafe readPtr.deallocate() }
         let readBuffer: Span.Raw.Mutable = unsafe .init(readPtr)
 
-        let n = try await io.read(from: pipe.read, into: readBuffer)
+        let n = unsafe try await io.read(from: pipe.read, into: readBuffer)
 
         #expect(n == payload.count)
         var received: [UInt8] = []
@@ -86,7 +86,7 @@ extension Event.Actor.Test {
         defer { unsafe writePtr.deallocate() }
         for (i, byte) in payload.enumerated() { unsafe writePtr[i] = byte }
         let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
-        _ = try await io.write(to: pipe.write, from: writeBuffer)
+        _ = unsafe try await io.write(to: pipe.write, from: writeBuffer)
 
         try await io.ready(from: pipe.read, interest: .read)
 
@@ -95,7 +95,7 @@ extension Event.Actor.Test {
             alignment: 1
         )
         defer { unsafe readPtr.deallocate() }
-        let n = try await io.read(
+        let n = unsafe try await io.read(
             from: pipe.read,
             into: unsafe .init(readPtr)
         )
@@ -111,7 +111,7 @@ extension Event.Actor.Test {
         let actor = try Event.Actor()
         let io = IO.events(on: actor)
 
-        _ = io.unownedExecutor
+        _ = unsafe io.unownedExecutor
     }
 
     @Test
@@ -123,6 +123,6 @@ extension Event.Actor.Test {
         let execA = unsafe ioA.unownedExecutor
         let execB = unsafe ioB.unownedExecutor
 
-        _ = (execA, execB)
+        _ = unsafe (execA, execB)
     }
 }

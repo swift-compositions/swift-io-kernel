@@ -2,6 +2,7 @@ public import Span
 
 extension Basic {
 
+    @safe
     public struct Capabilities: Sendable {
 
         public let read:
@@ -42,8 +43,8 @@ extension Basic {
                     Kernel.Event.Interest
                 ) async throws(Basic.Error) -> Void
         ) {
-            self.read = read
-            self.write = write
+            unsafe self.read = unsafe read
+            unsafe self.write = unsafe write
             self.close = close
             self.ready = ready
         }

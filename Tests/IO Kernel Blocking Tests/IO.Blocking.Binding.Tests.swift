@@ -23,19 +23,19 @@ extension Basic.BindingTest.`Mandatory Binding` {
         let pipe = try Kernel.Pipe.pipe()
 
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { ptr.deallocate() }
+        defer { unsafe ptr.deallocate() }
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
         unsafe ptr[0] = 1
-        _ = try await io.write(to: pipe.write, from: writeBuf)
-        _ = try await io.read(from: pipe.read, into: readBuf)
+        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
 
         try await Task.sleep(for: .milliseconds(10))
 
         unsafe ptr[0] = 2
-        _ = try await io.write(to: pipe.write, from: writeBuf)
-        let n = try await io.read(from: pipe.read, into: readBuf)
+        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+        let n = unsafe try await io.read(from: pipe.read, into: readBuf)
         #expect(n == 1)
         #expect(unsafe ptr[0] == 2)
     }
@@ -53,14 +53,14 @@ extension Basic.BindingTest.`Mandatory Binding` {
                         byteCount: 1,
                         alignment: 1
                     )
-                    defer { ptr.deallocate() }
+                    defer { unsafe ptr.deallocate() }
                     unsafe ptr[0] = 7
                     let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
                     let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-                    _ = try await io.write(to: pipe.write, from: writeBuf)
+                    _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
                     try await Task.sleep(for: .milliseconds(1))
-                    _ = try await io.read(from: pipe.read, into: readBuf)
+                    _ = unsafe try await io.read(from: pipe.read, into: readBuf)
                 }
             }
             try await group.waitForAll()
@@ -91,16 +91,16 @@ private func makeProbedIO(
     recorder: ThreadRecorder
 ) -> IO<Basic.Capabilities> {
     let actor = Kernel.Thread.Actor(executor: executor)
-    let capabilities = Basic.Capabilities(
+    let capabilities = unsafe Basic.Capabilities(
         read: { fd, buf throws(Basic.Error) -> Int in
             let id = await actor.id
             recorder.record(id)
-            return try await actor.read(from: fd, into: buf)
+            return unsafe try await actor.read(from: fd, into: buf)
         },
         write: { fd, buf throws(Basic.Error) -> Int in
             let id = await actor.id
             recorder.record(id)
-            return try await actor.write(to: fd, from: buf)
+            return unsafe try await actor.write(to: fd, from: buf)
         },
         close: { fd in
             await actor.close(consume fd)
@@ -128,13 +128,13 @@ extension Basic.BindingTest.`Shared Executor` {
 
         let pipe = try Kernel.Pipe.pipe()
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { ptr.deallocate() }
+        defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 11
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-        _ = try await ioA.write(to: pipe.write, from: writeBuf)
-        _ = try await ioB.read(from: pipe.read, into: readBuf)
+        _ = unsafe try await ioA.write(to: pipe.write, from: writeBuf)
+        _ = unsafe try await ioB.read(from: pipe.read, into: readBuf)
         #expect(unsafe ptr[0] == 11)
 
         let ids = recorder.snapshot()
@@ -160,15 +160,15 @@ extension Basic.BindingTest.`Shared Executor` {
         let pipeA = try Kernel.Pipe.pipe()
         let pipeB = try Kernel.Pipe.pipe()
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { ptr.deallocate() }
+        defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 22
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-        _ = try await ioA.write(to: pipeA.write, from: writeBuf)
-        _ = try await ioB.write(to: pipeB.write, from: writeBuf)
-        _ = try await ioA.read(from: pipeA.read, into: readBuf)
-        _ = try await ioB.read(from: pipeB.read, into: readBuf)
+        _ = unsafe try await ioA.write(to: pipeA.write, from: writeBuf)
+        _ = unsafe try await ioB.write(to: pipeB.write, from: writeBuf)
+        _ = unsafe try await ioA.read(from: pipeA.read, into: readBuf)
+        _ = unsafe try await ioB.read(from: pipeB.read, into: readBuf)
 
         let ids = recorder.snapshot()
         #expect(ids.count == 4)
@@ -193,7 +193,7 @@ actor SharedExecutorApp {
 
 extension SharedExecutorApp {
     nonisolated var unownedExecutor: UnownedSerialExecutor {
-        io.unownedExecutor
+        unsafe io.unownedExecutor
     }
 
     func roundtrip(
@@ -202,13 +202,13 @@ extension SharedExecutorApp {
         value: UInt8
     ) async throws(Basic.Error) -> UInt8 {
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { ptr.deallocate() }
+        defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = value
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-        _ = try await io.write(to: writeFd, from: writeBuf)
-        _ = try await io.read(from: readFd, into: readBuf)
+        _ = unsafe try await io.write(to: writeFd, from: writeBuf)
+        _ = unsafe try await io.read(from: readFd, into: readBuf)
         return unsafe ptr[0]
     }
 }
@@ -235,12 +235,12 @@ extension Basic.BindingTest.`Zero Hop` {
 
         let pipe2 = try Kernel.Pipe.pipe()
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { ptr.deallocate() }
+        defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 1
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
-        _ = try await probe.write(to: pipe2.write, from: writeBuf)
-        _ = try await probe.read(from: pipe2.read, into: readBuf)
+        _ = unsafe try await probe.write(to: pipe2.write, from: writeBuf)
+        _ = unsafe try await probe.read(from: pipe2.read, into: readBuf)
 
         let ids = recorder.snapshot()
         #expect(ids.count == 2)
@@ -260,12 +260,12 @@ extension Basic.BindingTest.`Head Of Line` {
         let pipeB = try Kernel.Pipe.pipe()
 
         let oneByte = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { oneByte.deallocate() }
+        defer { unsafe oneByte.deallocate() }
         unsafe oneByte[0] = 99
         let oneByteBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(oneByte))
         do throws(Kernel.IO.Write.Error) {
-            _ = try Kernel.IO.Write.write(pipeA.write, from: unsafe oneByteBuf.base.nonNull)
-            _ = try Kernel.IO.Write.write(pipeB.write, from: unsafe oneByteBuf.base.nonNull)
+            _ = unsafe try Kernel.IO.Write.write(pipeA.write, from: unsafe oneByteBuf.base.nonNull)
+            _ = unsafe try Kernel.IO.Write.write(pipeB.write, from: unsafe oneByteBuf.base.nonNull)
         } catch {
             Issue.record("pre-fill write failed: \(error)")
             return
@@ -273,19 +273,19 @@ extension Basic.BindingTest.`Head Of Line` {
 
         let order = OrderCounter()
         let bufA = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { bufA.deallocate() }
+        defer { unsafe bufA.deallocate() }
         let bufB = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { bufB.deallocate() }
+        defer { unsafe bufB.deallocate() }
         let readBufA: Span.Raw.Mutable = unsafe .init(bufA)
         let readBufB: Span.Raw.Mutable = unsafe .init(bufB)
 
         async let a: Int = {
-            let n = try await io.read(from: pipeA.read, into: readBufA)
+            let n = unsafe try await io.read(from: pipeA.read, into: readBufA)
             order.append(1)
             return n
         }()
         async let b: Int = {
-            let n = try await io.read(from: pipeB.read, into: readBufB)
+            let n = unsafe try await io.read(from: pipeB.read, into: readBufB)
             order.append(2)
             return n
         }()

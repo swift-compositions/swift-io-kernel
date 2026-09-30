@@ -16,7 +16,7 @@ extension Event.Actor.`Edge Case` {
         nonisolated(unsafe) static let lock = Kernel.Thread.Mutex()
 
         static func retain(_ actor: Event.Actor) {
-            lock.withLock { actors.append(actor) }
+            unsafe lock.withLock { unsafe actors.append(actor) }
         }
     }
 

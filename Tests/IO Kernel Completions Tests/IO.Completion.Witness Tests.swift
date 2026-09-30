@@ -32,7 +32,7 @@
                     for (i, byte) in payload.enumerated() { unsafe writePtr[i] = byte }
                     let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
 
-                    let written = try await io.write(to: pipe.write, from: writeBuffer)
+                    let written = unsafe try await io.write(to: pipe.write, from: writeBuffer)
                     #expect(written == payload.count)
 
                     let readPtr = UnsafeMutableRawBufferPointer.allocate(
@@ -42,7 +42,7 @@
                     defer { unsafe readPtr.deallocate() }
                     let readBuffer: Span.Raw.Mutable = unsafe .init(readPtr)
 
-                    let n = try await io.read(from: pipe.read, into: readBuffer)
+                    let n = unsafe try await io.read(from: pipe.read, into: readBuffer)
                     #expect(n == payload.count)
 
                     var received: [UInt8] = []
@@ -62,14 +62,14 @@
                     defer { unsafe oneByte.deallocate() }
                     unsafe oneByte[0] = 0x42
 
-                    _ = try await io.write(
+                    _ = unsafe try await io.write(
                         to: pipe.write,
                         from: unsafe .init(UnsafeRawBufferPointer(oneByte))
                     )
 
                     try await io.ready(from: pipe.read, interest: .read)
 
-                    let n = try await io.read(
+                    let n = unsafe try await io.read(
                         from: pipe.read,
                         into: unsafe .init(oneByte)
                     )
@@ -89,24 +89,24 @@
                     defer { unsafe oneByte.deallocate() }
 
                     unsafe oneByte[0] = 0x01
-                    _ = try await io.write(
+                    _ = unsafe try await io.write(
                         to: pipe.write,
                         from: unsafe .init(UnsafeRawBufferPointer(oneByte))
                     )
                     unsafe oneByte[0] = 0x02
-                    _ = try await io.write(
+                    _ = unsafe try await io.write(
                         to: pipe.write,
                         from: unsafe .init(UnsafeRawBufferPointer(oneByte))
                     )
 
                     try await io.ready(from: pipe.read, interest: .read)
-                    _ = try await io.read(
+                    _ = unsafe try await io.read(
                         from: pipe.read,
                         into: unsafe .init(oneByte)
                     )
 
                     try await io.ready(from: pipe.read, interest: .read)
-                    _ = try await io.read(
+                    _ = unsafe try await io.read(
                         from: pipe.read,
                         into: unsafe .init(oneByte)
                     )
@@ -149,7 +149,7 @@
                             alignment: 1
                         )
                         defer { unsafe readPtr.deallocate() }
-                        return try await io.read(
+                        return unsafe try await io.read(
                             from: pipe.read,
                             into: unsafe .init(readPtr)
                         )

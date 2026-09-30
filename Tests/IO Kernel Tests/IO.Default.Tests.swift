@@ -17,7 +17,7 @@ private struct `Test` {
     func `IO.default() returns an IO with a non-default executor`() async throws {
         let io = IO.default()
 
-        _ = io.unownedExecutor
+        _ = unsafe io.unownedExecutor
     }
 
     @Test
@@ -37,7 +37,7 @@ private struct `Test` {
         defer { unsafe writePtr.deallocate() }
         for (i, byte) in payload.enumerated() { unsafe writePtr[i] = byte }
 
-        _ = try await io.write(
+        _ = unsafe try await io.write(
             to: pipe.write,
             from: unsafe .init(UnsafeRawBufferPointer(writePtr))
         )
@@ -48,7 +48,7 @@ private struct `Test` {
         )
         defer { unsafe readPtr.deallocate() }
 
-        let n = try await io.read(
+        let n = unsafe try await io.read(
             from: pipe.read,
             into: unsafe .init(readPtr)
         )

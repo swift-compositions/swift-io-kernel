@@ -96,7 +96,7 @@
                     defer { unsafe readBuf.deallocate() }
                     let buffer: Span.Raw.Mutable = unsafe .init(readBuf)
                     do {
-                        _ = try await actor.read(from: pipe.read, into: buffer)
+                        _ = unsafe try await actor.read(from: pipe.read, into: buffer)
                         Issue.record("expected Basic.Error")
                     } catch {
 

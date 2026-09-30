@@ -119,7 +119,7 @@
     extension Event.Actor {
 
         fileprivate func dispatch(_ events: UnsafeBufferPointer<Kernel.Event>) {
-            for event in unsafe events {
+            for unsafe event in unsafe events {
                 guard var registration = registrations[event.id] else { continue }
                 registration.senders.drain(event: event, for: .read)
                 registration.senders.drain(event: event, for: .write)

@@ -5,17 +5,17 @@
     extension IO where Capabilities == Basic.Capabilities {
 
         public static func events(on actor: Event.Actor) -> IO<Basic.Capabilities> {
-            let capabilities = Basic.Capabilities(
+            let capabilities = unsafe Basic.Capabilities(
                 read: { fd, buf throws(Basic.Error) -> Int in
                     do throws(Event.Failure) {
-                        return try await actor.read(from: fd, into: buf)
+                        return unsafe try await actor.read(from: fd, into: buf)
                     } catch {
                         throw error.basicError
                     }
                 },
                 write: { fd, buf throws(Basic.Error) -> Int in
                     do throws(Event.Failure) {
-                        return try await actor.write(to: fd, from: buf)
+                        return unsafe try await actor.write(to: fd, from: buf)
                     } catch {
                         throw error.basicError
                     }
@@ -32,7 +32,7 @@
                 }
             )
             let runner = unsafe Self.Runner(
-                executor: { actor.unownedExecutor },
+                executor: { unsafe actor.unownedExecutor },
                 shutdown: {
 
                 }

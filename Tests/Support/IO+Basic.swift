@@ -7,7 +7,7 @@ extension IO where Capabilities == Basic.Capabilities {
         from fd: borrowing Kernel::Kernel.Descriptor,
         into buffer: Span.Raw.Mutable
     ) async throws(Basic.Error) -> Int {
-        try await capabilities.read(fd, buffer)
+        unsafe try await capabilities.read(fd, buffer)
     }
 
     @inlinable
@@ -15,7 +15,7 @@ extension IO where Capabilities == Basic.Capabilities {
         to fd: borrowing Kernel::Kernel.Descriptor,
         from buffer: Span.Raw
     ) async throws(Basic.Error) -> Int {
-        try await capabilities.write(fd, buffer)
+        unsafe try await capabilities.write(fd, buffer)
     }
 
     @inlinable
@@ -33,6 +33,6 @@ extension IO where Capabilities == Basic.Capabilities {
 
     @inlinable
     public var unownedExecutor: UnownedSerialExecutor {
-        runner.executor()
+        unsafe runner.executor()
     }
 }
