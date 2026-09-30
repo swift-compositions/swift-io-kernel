@@ -103,6 +103,7 @@ let package = Package(
             branch: "main"
         ),
         .package(url: "https://github.com/swift-atoms/swift-span.git", branch: "main", traits: ["Byte"]),
+        .package(url: "https://github.com/swift-atoms/swift-finite.git", branch: "main", traits: ["Tagged"]),
     ],
     targets: [
 

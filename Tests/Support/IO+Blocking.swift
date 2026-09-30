@@ -1,12 +1,12 @@
 public import Executors
 
-extension IO.Kernel where Capabilities == Basic.Capabilities {
+extension IO where Capabilities == Basic.Capabilities {
 
-    public static func blocking() -> IO.Kernel<Basic.Capabilities> {
+    public static func blocking() -> IO<Basic.Capabilities> {
         blocking(on: Basic._sharedBlockingExecutors.next())
     }
 
-    public static func blocking(on executor: Kernel::Kernel.Thread.Executor) -> IO.Kernel<Basic.Capabilities> {
+    public static func blocking(on executor: Kernel::Kernel.Thread.Executor) -> IO<Basic.Capabilities> {
         let actor = Kernel::Kernel.Thread.Actor(executor: executor)
         let capabilities = Basic.Capabilities(
             read: { fd, buf throws(Basic.Error) -> Int in
@@ -28,7 +28,7 @@ extension IO.Kernel where Capabilities == Basic.Capabilities {
 
             }
         )
-        return IO.Kernel(capabilities: capabilities, runner: runner)
+        return IO(capabilities: capabilities, runner: runner)
     }
 }
 

@@ -8,21 +8,21 @@ import Testing
 
     .disabled(
         if: Toolchain.hasTaggedMetadataSIGSEGV,
-        "catalog §A9: IO.Kernel.default() falls through to a real strategy actor — Completion.Actor's Registry (site 4, Kernel.Completion.Token key) on Linux with io_uring, or Event.Actor's Kernel.Event.Driver registry (site 3, Kernel.Event.ID key) otherwise — both Dictionary<Tagged-key, …>; swift_getTypeByMangledName null-deref SIGSEGV on the first registry insert on compiler(<6.4). Fixed on Swift 6.4+. See swift-institute/Issues/swift-issue-tagged-dictionary-insert-metadata-crash."
+        "catalog §A9: IO.default() falls through to a real strategy actor — Completion.Actor's Registry (site 4, Kernel.Completion.Token key) on Linux with io_uring, or Event.Actor's Kernel.Event.Driver registry (site 3, Kernel.Event.ID key) otherwise — both Dictionary<Tagged-key, …>; swift_getTypeByMangledName null-deref SIGSEGV on the first registry insert on compiler(<6.4). Fixed on Swift 6.4+. See swift-institute/Issues/swift-issue-tagged-dictionary-insert-metadata-crash."
     )
 )
-struct `Test` {
+private struct `Test` {
 
     @Test
-    func `IO.Kernel.default() returns an IO with a non-default executor`() async throws {
-        let io = IO.Kernel.default()
+    func `IO.default() returns an IO with a non-default executor`() async throws {
+        let io = IO.default()
 
         _ = io.unownedExecutor
     }
 
     @Test
-    func `IO.Kernel.default() round-trips bytes through a pipe`() async throws {
-        let io = IO.Kernel.default()
+    func `IO.default() round-trips bytes through a pipe`() async throws {
+        let io = IO.default()
         let pipe = try Kernel.Pipe.pipe()
 
         #if !os(Windows)

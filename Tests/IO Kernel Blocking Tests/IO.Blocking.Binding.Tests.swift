@@ -19,7 +19,7 @@ extension Basic.BindingTest.`Mandatory Binding` {
     @Test
     func `read survives Task.sleep — actor isolation pins to executor`() async throws {
 
-        let io = IO.Kernel.blocking()
+        let io = IO.blocking()
         let pipe = try Kernel.Pipe.pipe()
 
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
@@ -46,7 +46,7 @@ extension Basic.BindingTest.`Mandatory Binding` {
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<count {
                 group.addTask {
-                    let io = IO.Kernel.blocking()
+                    let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
                     let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
@@ -89,7 +89,7 @@ extension OrderCounter {
 private func makeProbedIO(
     on executor: Kernel.Thread.Executor,
     recorder: ThreadRecorder
-) -> IO.Kernel<Basic.Capabilities> {
+) -> IO<Basic.Capabilities> {
     let actor = Kernel.Thread.Actor(executor: executor)
     let capabilities = Basic.Capabilities(
         read: { fd, buf throws(Basic.Error) -> Int in
@@ -109,11 +109,11 @@ private func makeProbedIO(
 
         }
     )
-    let runner = unsafe IO.Kernel<Basic.Capabilities>.Runner(
+    let runner = unsafe IO<Basic.Capabilities>.Runner(
         executor: { unsafe actor.unownedExecutor },
         shutdown: {}
     )
-    return IO.Kernel(capabilities: capabilities, runner: runner)
+    return IO(capabilities: capabilities, runner: runner)
 }
 
 extension Basic.BindingTest.`Shared Executor` {
@@ -183,11 +183,11 @@ extension Basic.BindingTest.`Shared Executor` {
 
 actor SharedExecutorApp {
     let executor: Kernel.Thread.Executor
-    let io: IO.Kernel<Basic.Capabilities>
+    let io: IO<Basic.Capabilities>
 
     init(executor: Kernel.Thread.Executor) {
         self.executor = executor
-        self.io = IO.Kernel.blocking(on: executor)
+        self.io = IO.blocking(on: executor)
     }
 }
 
@@ -255,7 +255,7 @@ extension Basic.BindingTest.`Head Of Line` {
     @Test
     func `ops on a single .blocking() IO serialize on the actor`() async throws {
 
-        let io = IO.Kernel.blocking()
+        let io = IO.blocking()
         let pipeA = try Kernel.Pipe.pipe()
         let pipeB = try Kernel.Pipe.pipe()
 

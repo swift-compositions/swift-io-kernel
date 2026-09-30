@@ -24,13 +24,13 @@ extension Test.Unit {
     @Test
     func `IO bundles capabilities and runner`() {
         let caps = TrivialCapabilities(tag: 42)
-        let io = IO.Kernel<TrivialCapabilities>(capabilities: caps, runner: .unimplemented)
+        let io = IO<TrivialCapabilities>(capabilities: caps, runner: .unimplemented)
         #expect(io.capabilities.tag == 42)
     }
 
     @Test
     func `IO is Sendable across task boundaries when capabilities are Sendable`() async {
-        let io = IO.Kernel<TrivialCapabilities>(
+        let io = IO<TrivialCapabilities>(
             capabilities: TrivialCapabilities(tag: 1),
             runner: .unimplemented
         )
@@ -40,7 +40,7 @@ extension Test.Unit {
 
     @Test
     func `convenience initializer supplies an unimplemented runner`() {
-        let io = IO.Kernel<TrivialCapabilities>(capabilities: TrivialCapabilities(tag: 7))
+        let io = IO<TrivialCapabilities>(capabilities: TrivialCapabilities(tag: 7))
         #expect(io.capabilities.tag == 7)
     }
 }
@@ -49,7 +49,7 @@ extension Test.`Edge Case` {
 
     @Test
     func `IO is generic over arbitrary Sendable capability types`() {
-        let io = IO.Kernel<TaggedCapabilities<Client>>(
+        let io = IO<TaggedCapabilities<Client>>(
             capabilities: TaggedCapabilities<Client>(marker: 99),
             runner: .unimplemented
         )

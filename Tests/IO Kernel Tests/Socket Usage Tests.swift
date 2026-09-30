@@ -9,7 +9,7 @@ extension Socket {
     }
 
     struct Address: Sendable, Equatable {
-        let host: String
+        let host: Swift.String
         let port: UInt16
     }
 
@@ -46,15 +46,15 @@ extension Socket {
 }
 
 private actor Recorder {
-    var calls: [String] = []
+    var calls: [Swift.String] = []
 }
 
 extension Recorder {
-    func log(_ entry: String) { calls.append(entry) }
-    func snapshot() -> [String] { calls }
+    func log(_ entry: Swift.String) { calls.append(entry) }
+    func snapshot() -> [Swift.String] { calls }
 }
 
-private func fake(recorder: Recorder) -> IO.Kernel<Socket.Capabilities> {
+private func fake(recorder: Recorder) -> IO<Socket.Capabilities> {
     let caps = Socket.Capabilities(
         connect: { fd, addr throws(Socket.Error) in
             await recorder.log("connect(fd: \(fd.raw), \(addr.host):\(addr.port))")
@@ -78,7 +78,7 @@ private func fake(recorder: Recorder) -> IO.Kernel<Socket.Capabilities> {
             await recorder.log("close(fd: \(fd.raw))")
         }
     )
-    return IO.Kernel(capabilities: caps)
+    return IO(capabilities: caps)
 }
 
 extension Socket.Test.Integration {

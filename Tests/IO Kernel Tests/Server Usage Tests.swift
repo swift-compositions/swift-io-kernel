@@ -5,7 +5,7 @@ private enum Server {}
 
 extension Server {
     struct Address: Sendable, Equatable {
-        let host: String
+        let host: Swift.String
         let port: UInt16
     }
 
@@ -46,18 +46,18 @@ extension Server {
 }
 
 private actor Recorder {
-    var calls: [String] = []
+    var calls: [Swift.String] = []
 }
 
 extension Recorder {
-    func log(_ entry: String) { calls.append(entry) }
-    func snapshot() -> [String] { calls }
+    func log(_ entry: Swift.String) { calls.append(entry) }
+    func snapshot() -> [Swift.String] { calls }
 }
 
 private func fake(
     recorder: Recorder,
     acceptedPeer: Server.Address
-) -> IO.Kernel<Server.Capabilities> {
+) -> IO<Server.Capabilities> {
     let caps = Server.Capabilities(
         bind: { address throws(Server.Error) in
             await recorder.log("bind(\(address.host):\(address.port))")
@@ -74,7 +74,7 @@ private func fake(
             await recorder.log("close(listener: \(listener.raw))")
         }
     )
-    return IO.Kernel(capabilities: caps)
+    return IO(capabilities: caps)
 }
 
 extension Server.Test.Integration {
@@ -113,7 +113,7 @@ extension Server.Test.Integration {
             },
             close: { _ in }
         )
-        let io = IO.Kernel(capabilities: caps)
+        let io = IO(capabilities: caps)
         _ = io.runner
     }
 }

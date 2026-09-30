@@ -5,9 +5,9 @@
     public import IO_Kernel_Events
     import Synchronizer_Blocking
 
-    extension IO.Kernel where Capabilities == Basic.Capabilities {
+    extension IO where Capabilities == Basic.Capabilities {
 
-        public static func completionsTest() throws -> IO.Kernel<Basic.Capabilities> {
+        public static func completionsTest() throws -> IO<Basic.Capabilities> {
             #if os(Linux)
                 if Kernel::Kernel.IO.Uring.isSupported {
                     return try Self.completions()

@@ -22,7 +22,7 @@ extension Event.Actor.`Concurrent Ready` {
     @Test
     func `two concurrent awaits on the same registration ID`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         let pipe = try Kernel.Pipe.pipe()
         try Kernel.File.Control.setNonBlocking(pipe.read)
@@ -50,7 +50,7 @@ extension Event.Actor.`Concurrent Ready` {
     @Test
     func `sequential io.ready calls on the same fd`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         let pipe = try Kernel.Pipe.pipe()
         try Kernel.File.Control.setNonBlocking(pipe.read)

@@ -18,7 +18,7 @@
             @Suite struct `Integration` {
 
                 @Test func `pipe read/write round-trip`() async throws {
-                    let io = try IO.Kernel.completionsTest()
+                    let io = try IO.completionsTest()
                     let pipe = try Kernel.Pipe.pipe()
                     try? Kernel.File.Control.setNonBlocking(pipe.read)
 
@@ -51,7 +51,7 @@
                 }
 
                 @Test func `ready fires on pre-filled pipe`() async throws {
-                    let io = try IO.Kernel.completionsTest()
+                    let io = try IO.completionsTest()
                     let pipe = try Kernel.Pipe.pipe()
                     try? Kernel.File.Control.setNonBlocking(pipe.read)
 
@@ -78,7 +78,7 @@
                 }
 
                 @Test func `ready is single-shot across calls`() async throws {
-                    let io = try IO.Kernel.completionsTest()
+                    let io = try IO.completionsTest()
                     let pipe = try Kernel.Pipe.pipe()
                     try? Kernel.File.Control.setNonBlocking(pipe.read)
 
@@ -113,7 +113,7 @@
                 }
 
                 @Test func `close completes without error`() async throws {
-                    let io = try IO.Kernel.completionsTest()
+                    let io = try IO.completionsTest()
                     let pipe = try Kernel.Pipe.pipe()
                     let duped = try Kernel.Descriptor.Duplicate.duplicate(pipe.write)
                     await io.close(consume duped)
@@ -140,7 +140,7 @@
                             ),
                         ]
                     }
-                    let io = IO.Kernel.completions(on: actor)
+                    let io = IO.completions(on: actor)
 
                     let task = Task {
                         let pipe = try Kernel.Pipe.pipe()

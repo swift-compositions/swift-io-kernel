@@ -7,7 +7,7 @@ import Testing
 struct `IO blocking run tests` {
     @Test
     func `read/write through pipe`() async throws {
-        let io = IO.Kernel.blocking()
+        let io = IO.blocking()
         let pipe = try Kernel.Pipe.pipe()
 
         let message: [UInt8] = [72, 101, 108, 108, 111]
@@ -39,7 +39,7 @@ struct `IO blocking run tests` {
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<count {
                 group.addTask {
-                    let io = IO.Kernel.blocking()
+                    let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
                     let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
@@ -66,7 +66,7 @@ struct `IO blocking run tests` {
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<count {
                 group.addTask {
-                    let io = IO.Kernel.blocking()
+                    let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
                     let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
@@ -94,7 +94,7 @@ struct `IO blocking run tests` {
 
     @Test
     func `errors propagate from closure through witness to caller`() async throws {
-        let io = IO.Kernel.blocking()
+        let io = IO.blocking()
         let readPtr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
         defer { readPtr.deallocate() }
         let readBuf: Span.Raw.Mutable = unsafe .init(readPtr)
@@ -108,7 +108,7 @@ struct `IO blocking run tests` {
 
     @Test
     func `IO instance is reusable across multiple calls`() async throws {
-        let io = IO.Kernel.blocking()
+        let io = IO.blocking()
 
         let pipe = try Kernel.Pipe.pipe()
         let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)

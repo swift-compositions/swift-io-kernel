@@ -5,7 +5,7 @@ private enum File {}
 
 extension File {
     struct Path: Sendable, Equatable {
-        let raw: String
+        let raw: Swift.String
     }
 
     struct Descriptor: Sendable, Equatable {
@@ -55,15 +55,15 @@ extension File {
 }
 
 private actor Recorder {
-    var calls: [String] = []
+    var calls: [Swift.String] = []
 }
 
 extension Recorder {
-    func log(_ entry: String) { calls.append(entry) }
-    func snapshot() -> [String] { calls }
+    func log(_ entry: Swift.String) { calls.append(entry) }
+    func snapshot() -> [Swift.String] { calls }
 }
 
-private func fake(recorder: Recorder) -> IO.Kernel<File.Capabilities> {
+private func fake(recorder: Recorder) -> IO<File.Capabilities> {
     let caps = File.Capabilities(
         open: { path, flags throws(File.Error) in
             await recorder.log("open(\(path.raw), flags: \(flags.raw))")
@@ -91,7 +91,7 @@ private func fake(recorder: Recorder) -> IO.Kernel<File.Capabilities> {
             await recorder.log("rename(\(from.raw) -> \(to.raw))")
         }
     )
-    return IO.Kernel(capabilities: caps)
+    return IO(capabilities: caps)
 }
 
 extension File.Test.Integration {

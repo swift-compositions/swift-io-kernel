@@ -1,8 +1,8 @@
 public import Kernel
 
-extension IO.Kernel where Capabilities == Basic.Capabilities {
+extension IO where Capabilities == Basic.Capabilities {
 
-    public static func `default`() -> IO.Kernel<Basic.Capabilities> {
+    public static func `default`() -> IO<Basic.Capabilities> {
         #if os(Linux)
             if Kernel::Kernel.IO.Uring.isSupported,
                 let actor = try? Completion.Actor.shared()

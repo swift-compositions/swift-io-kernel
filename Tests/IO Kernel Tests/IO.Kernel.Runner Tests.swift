@@ -1,7 +1,7 @@
 import IO_Kernel_Test_Support
 import Testing
 
-@Suite("IO.Kernel.Runner")
+@Suite("IO.Runner")
 private struct `Test` {
     @Suite struct `Unit` {}
     @Suite struct `Edge Case` {}
@@ -34,7 +34,7 @@ extension Test.Unit {
     func `Runner stores executor and shutdown closures`() async {
         let counter = Counter()
 
-        let runner = unsafe IO.Kernel<Int>.Runner(
+        let runner = unsafe IO<Int>.Runner(
             executor: {
                 unsafe UnownedSerialExecutor(ordinary: SimpleExecutor.shared)
             },
@@ -51,7 +51,7 @@ extension Test.Unit {
     @Test
     func `runner retains the executor captured by its closure`() {
         weak var retained: SimpleExecutor?
-        var runner: IO.Kernel<Int>.Runner?
+        var runner: IO<Int>.Runner?
         do {
             let executor = SimpleExecutor()
             retained = executor
@@ -70,7 +70,7 @@ extension Test.Unit {
     @Test
     func `each shutdown call reaches the supplied implementation`() async {
         let counter = Counter()
-        let runner = unsafe IO.Kernel<Int>.Runner(
+        let runner = unsafe IO<Int>.Runner(
             executor: { unsafe SimpleExecutor.shared.asUnownedSerialExecutor() },
             shutdown: { await counter.increment() }
         )

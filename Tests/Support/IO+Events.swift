@@ -2,9 +2,9 @@
 
     public import IO_Kernel_Events
 
-    extension IO.Kernel where Capabilities == Basic.Capabilities {
+    extension IO where Capabilities == Basic.Capabilities {
 
-        public static func events(on actor: Event.Actor) -> IO.Kernel<Basic.Capabilities> {
+        public static func events(on actor: Event.Actor) -> IO<Basic.Capabilities> {
             let capabilities = Basic.Capabilities(
                 read: { fd, buf throws(Basic.Error) -> Int in
                     do throws(Event.Failure) {
@@ -37,10 +37,10 @@
 
                 }
             )
-            return IO.Kernel(capabilities: capabilities, runner: runner)
+            return IO(capabilities: capabilities, runner: runner)
         }
 
-        public static func events() throws(Event.Failure) -> IO.Kernel<Basic.Capabilities> {
+        public static func events() throws(Event.Failure) -> IO<Basic.Capabilities> {
             events(on: try Event.Actor.shared())
         }
     }

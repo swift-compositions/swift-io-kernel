@@ -20,7 +20,7 @@ extension Event.Actor.Test {
     @Test
     func `pipe round-trip: write then read returns the bytes written`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         let pipe = try Kernel.Pipe.pipe()
         try Kernel.File.Control.setNonBlocking(pipe.read)
@@ -58,7 +58,7 @@ extension Event.Actor.Test {
     @Test
     func `ready on a pipe write-end returns immediately when writable`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         let pipe = try Kernel.Pipe.pipe()
         try Kernel.File.Control.setNonBlocking(pipe.read)
@@ -70,7 +70,7 @@ extension Event.Actor.Test {
     @Test
     func `ready then write+read composes: explicit readiness before syscall`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         let pipe = try Kernel.Pipe.pipe()
         try Kernel.File.Control.setNonBlocking(pipe.read)
@@ -107,18 +107,18 @@ extension Event.Actor.Test {
 extension Event.Actor.Test {
 
     @Test
-    func `IO.Kernel.events witness carries a non-default unownedExecutor`() async throws {
+    func `IO.events witness carries a non-default unownedExecutor`() async throws {
         let actor = try Event.Actor()
-        let io = IO.Kernel.events(on: actor)
+        let io = IO.events(on: actor)
 
         _ = io.unownedExecutor
     }
 
     @Test
-    func `two IO.Kernel.events witnesses from the same Events share a reactor thread`() async throws {
+    func `two IO.events witnesses from the same Events share a reactor thread`() async throws {
         let actor = try Event.Actor()
-        let ioA = IO.Kernel.events(on: actor)
-        let ioB = IO.Kernel.events(on: actor)
+        let ioA = IO.events(on: actor)
+        let ioB = IO.events(on: actor)
 
         let execA = unsafe ioA.unownedExecutor
         let execB = unsafe ioB.unownedExecutor

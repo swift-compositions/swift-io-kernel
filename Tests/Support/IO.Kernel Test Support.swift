@@ -1,16 +1,16 @@
 public import IO_Kernel
 
-extension IO.Kernel.Runner {
+extension IO.Runner {
 
-    public static var unimplemented: IO.Kernel.Runner {
-        unsafe IO.Kernel.Runner(
-            executor: { fatalError("IO.Kernel.Runner.unimplemented.executor() was called") },
-            shutdown: { fatalError("IO.Kernel.Runner.unimplemented.shutdown() was called") }
+    public static var unimplemented: IO.Runner {
+        unsafe IO.Runner(
+            executor: { fatalError("IO.Runner.unimplemented.executor() was called") },
+            shutdown: { fatalError("IO.Runner.unimplemented.shutdown() was called") }
         )
     }
 }
 
-extension IO.Kernel {
+extension IO {
 
     public init(capabilities: Capabilities) {
         self.init(capabilities: capabilities, runner: .unimplemented)

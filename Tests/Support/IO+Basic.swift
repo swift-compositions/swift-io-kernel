@@ -1,6 +1,6 @@
 public import Span
 
-extension IO.Kernel where Capabilities == Basic.Capabilities {
+extension IO where Capabilities == Basic.Capabilities {
 
     @inlinable
     public func read(

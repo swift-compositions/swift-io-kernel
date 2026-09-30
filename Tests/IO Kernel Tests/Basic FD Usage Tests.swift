@@ -43,15 +43,15 @@ extension BasicFD {
 }
 
 private actor Recorder {
-    var calls: [String] = []
+    var calls: [Swift.String] = []
 }
 
 extension Recorder {
-    func log(_ entry: String) { calls.append(entry) }
-    func snapshot() -> [String] { calls }
+    func log(_ entry: Swift.String) { calls.append(entry) }
+    func snapshot() -> [Swift.String] { calls }
 }
 
-private func fake(recorder: Recorder) -> IO.Kernel<BasicFD.Capabilities> {
+private func fake(recorder: Recorder) -> IO<BasicFD.Capabilities> {
     let caps = BasicFD.Capabilities(
         read: { fd, n throws(BasicFD.Error) in
             await recorder.log("read(fd: \(fd.raw), n: \(n))")
@@ -68,7 +68,7 @@ private func fake(recorder: Recorder) -> IO.Kernel<BasicFD.Capabilities> {
             await recorder.log("ready(fd: \(fd.raw), \(interest))")
         }
     )
-    return IO.Kernel(capabilities: caps)
+    return IO(capabilities: caps)
 }
 
 extension BasicFD.Test.Integration {
@@ -102,7 +102,7 @@ extension BasicFD.Test.Integration {
             close: { _ in },
             ready: { _, _ throws(BasicFD.Error) in }
         )
-        let io = IO.Kernel(capabilities: caps)
+        let io = IO(capabilities: caps)
 
         do throws(BasicFD.Error) {
             _ = try await io.capabilities.read(BasicFD.Descriptor(raw: 3), 64)
