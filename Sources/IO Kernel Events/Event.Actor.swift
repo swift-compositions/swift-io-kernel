@@ -164,7 +164,7 @@
             } catch {
                 switch error {
                 case .handle: throw .right(.invalidDescriptor)
-                case .tooManyOpen: throw .right(.platform(.POSIX.EMFILE))
+                case .tooManyOpen: throw .right(.platform(.EMFILE))
                 case .platform(let e): throw .right(.platform(e.code))
                 }
             }

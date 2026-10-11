@@ -15,7 +15,7 @@ extension Event.Actor.RetryDecision.Test.Unit {
     @Test
     func `EINTR is classified as retry`() {
         let decision = Event.Actor.RetryDecision(
-            for: .platform(.POSIX.EINTR)
+            for: .platform(.EINTR)
         )
         #expect(decision == .retry)
     }
@@ -23,7 +23,7 @@ extension Event.Actor.RetryDecision.Test.Unit {
     @Test
     func `ENOMEM yields before retry`() {
         let decision = Event.Actor.RetryDecision(
-            for: .platform(.POSIX.ENOMEM)
+            for: .platform(.ENOMEM)
         )
         #expect(decision == .yieldAndRetry)
     }
@@ -31,7 +31,7 @@ extension Event.Actor.RetryDecision.Test.Unit {
     @Test
     func `EAGAIN is classified as retry`() {
         let decision = Event.Actor.RetryDecision(
-            for: .platform(.POSIX.EAGAIN)
+            for: .platform(.EAGAIN)
         )
         #expect(decision == .retry)
     }

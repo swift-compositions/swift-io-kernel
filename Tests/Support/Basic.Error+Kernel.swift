@@ -8,7 +8,7 @@ extension Kernel.IO.Read.Error {
         #if os(Windows)
             brokenPipe = .Windows.ERROR_BROKEN_PIPE
         #else
-            brokenPipe = .POSIX.EPIPE
+            brokenPipe = .EPIPE
         #endif
         if code == brokenPipe {
             return .brokenPipe
@@ -25,7 +25,7 @@ extension Kernel.IO.Write.Error {
         #if os(Windows)
             brokenPipe = .Windows.ERROR_BROKEN_PIPE
         #else
-            brokenPipe = .POSIX.EPIPE
+            brokenPipe = .EPIPE
         #endif
         if code == brokenPipe {
             return .brokenPipe

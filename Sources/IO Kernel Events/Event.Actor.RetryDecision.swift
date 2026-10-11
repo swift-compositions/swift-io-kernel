@@ -14,13 +14,13 @@
 
         init(for error: Kernel.Event.Driver.Error) {
             switch error {
-            case .platform(let code) where code == .POSIX.EINTR:
+            case .platform(let code) where code == .EINTR:
                 self = .retry
 
-            case .platform(let code) where code == .POSIX.ENOMEM:
+            case .platform(let code) where code == .ENOMEM:
                 self = .yieldAndRetry
 
-            case .platform(let code) where Error::Error.Code.POSIX.isEAGAIN(code):
+            case .platform(let code) where code == .EAGAIN:
                 self = .retry
 
             default:

@@ -14,7 +14,7 @@
                 self = .notRegistered
 
             case .unsupportedPlatform:
-                self = .platform(.POSIX.ENOTSUP)
+                self = .platform(.ENOTSUP)
             }
         }
     }

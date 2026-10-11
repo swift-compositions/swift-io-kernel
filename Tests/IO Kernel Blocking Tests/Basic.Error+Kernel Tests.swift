@@ -14,8 +14,8 @@ extension Basic.Error.Test.Unit {
             let read: Kernel.IO.Read.Error = .platform(.init(code: .Windows.ERROR_BROKEN_PIPE))
             let write: Kernel.IO.Write.Error = .platform(.init(code: .Windows.ERROR_BROKEN_PIPE))
         #else
-            let read: Kernel.IO.Read.Error = .platform(.init(code: .POSIX.EPIPE))
-            let write: Kernel.IO.Write.Error = .platform(.init(code: .POSIX.EPIPE))
+            let read: Kernel.IO.Read.Error = .platform(.init(code: .EPIPE))
+            let write: Kernel.IO.Write.Error = .platform(.init(code: .EPIPE))
         #endif
 
         #expect(read.basicError == .brokenPipe)

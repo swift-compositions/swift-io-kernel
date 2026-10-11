@@ -22,16 +22,16 @@
                     return .platform(code)
 
                 case .invalidDescriptor:
-                    return .platform(.POSIX.EBADF)
+                    return .platform(.EBADF)
 
                 case .alreadyRegistered, .notRegistered, .deregistered:
-                    return .platform(.POSIX.EINVAL)
+                    return .platform(.EINVAL)
 
                 case .readClosed, .writeClosed:
                     return .brokenPipe
 
                 case .notConnected:
-                    return .platform(.POSIX.EINVAL)
+                    return .platform(.EINVAL)
                 }
             }
         }

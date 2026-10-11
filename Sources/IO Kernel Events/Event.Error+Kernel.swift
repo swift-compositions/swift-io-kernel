@@ -3,7 +3,7 @@
 
         @usableFromInline
         package var eventError: Event.Error {
-            if code == .POSIX.EPIPE {
+            if code == .EPIPE {
                 return .readClosed
             }
             return .platform(code)
@@ -14,7 +14,7 @@
 
         @usableFromInline
         package var eventError: Event.Error {
-            if code == .POSIX.EPIPE {
+            if code == .EPIPE {
                 return .writeClosed
             }
             return .platform(code)

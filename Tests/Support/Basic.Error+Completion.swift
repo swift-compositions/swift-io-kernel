@@ -11,17 +11,17 @@
                 return .cancelled
 
             case .invalidDescriptor:
-                return .platform(.POSIX.EBADF)
+                return .platform(.EBADF)
 
             case .tooManyOpen:
-                return .platform(.POSIX.EMFILE)
+                return .platform(.EMFILE)
 
             case .platform(let code):
-                if code == Error::Error.Code.POSIX.EPIPE { return .brokenPipe }
+                if code == Error::Error.Code.EPIPE { return .brokenPipe }
                 return .platform(code)
 
             case .kernel:
-                return .platform(.POSIX.EIO)
+                return .platform(.EIO)
             }
         }
     }
