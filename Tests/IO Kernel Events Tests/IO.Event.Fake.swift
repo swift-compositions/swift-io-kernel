@@ -217,6 +217,7 @@ extension Event.Fake.Controller {
 
     func poll(into buffer: inout [Kernel.Event]) throws(Kernel.Event.Driver.Error) -> Int {
         var pollError: Kernel.Event.Driver.Error?
+        var idle = false
         let count = state.withLock { state -> Int in
             if let error = state.nextPollError {
                 state.nextPollError = nil
@@ -231,9 +232,11 @@ extension Event.Fake.Controller {
             state.pendingEvents = []
             let count = min(events.count, buffer.count)
             for i in 0..<count { buffer[i] = events[i] }
+            idle = count == 0
             return count
         }
         if let pollError { throw pollError }
+        if idle { System.sleep(.milliseconds(1)) }
         return count
     }
 
