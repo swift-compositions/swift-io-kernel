@@ -25,8 +25,7 @@ extension Socket {
         let connect:
             @Sendable (borrowing Socket.Descriptor, Socket.Address) async throws(Socket.Error) ->
                 Void
-        let accept:
-            @Sendable (borrowing Socket.Descriptor) async throws(Socket.Error) -> Socket.Descriptor
+        let accept: @Sendable (borrowing Socket.Descriptor) async throws(Socket.Error) -> Socket.Descriptor
         let send: @Sendable (borrowing Socket.Descriptor, Int) async throws(Socket.Error) -> Int
         let recv: @Sendable (borrowing Socket.Descriptor, Int) async throws(Socket.Error) -> Int
         let shutdown: @Sendable (borrowing Socket.Descriptor) async throws(Socket.Error) -> Void

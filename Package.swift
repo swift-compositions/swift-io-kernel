@@ -81,7 +81,9 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
-            branch: "main", traits: ["Generational", "Memory"]),
+            branch: "main",
+            traits: ["Generational", "Memory"]
+        ),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
             branch: "main"
@@ -247,7 +249,7 @@ let package = Package(
                 "IO Kernel Test Support",
                 .product(name: "Span", package: "swift-span"),
             ]
-        )
+        ),
     ]
 )
 

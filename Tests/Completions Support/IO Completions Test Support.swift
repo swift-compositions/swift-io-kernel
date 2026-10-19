@@ -29,10 +29,8 @@
             private var _completions: [Kernel::Kernel.Completion.Event] = []
             private var _flushCount: Int = 0
             private var _isClosed: Bool = false
-            private var _onSubmit:
-                (@Sendable (Kernel::Kernel.Completion.Submission) -> Kernel::Kernel.Completion.Event?)? = nil
-            private var _response:
-                (@Sendable (Kernel::Kernel.Completion.Submission) -> [Kernel::Kernel.Completion.Event])? = nil
+            private var _onSubmit: (@Sendable (Kernel::Kernel.Completion.Submission) -> Kernel::Kernel.Completion.Event?)? = nil
+            private var _response: (@Sendable (Kernel::Kernel.Completion.Submission) -> [Kernel::Kernel.Completion.Event])? = nil
             private var _started: Bool = true
 
             public init() {}
@@ -56,8 +54,7 @@
             set { sync.synchronize { _onSubmit = newValue } }
         }
 
-        public var response:
-            (@Sendable (Kernel::Kernel.Completion.Submission) -> [Kernel::Kernel.Completion.Event])?
+        public var response: (@Sendable (Kernel::Kernel.Completion.Submission) -> [Kernel::Kernel.Completion.Event])?
         {
             get { sync.synchronize { _response } }
             set { sync.synchronize { _response = newValue } }

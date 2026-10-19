@@ -28,8 +28,7 @@ extension Server {
     struct Capabilities: Sendable {
         let bind: @Sendable (Server.Address) async throws(Server.Error) -> Server.Listener
         let listen: @Sendable (borrowing Server.Listener, Int) async throws(Server.Error) -> Void
-        let accept:
-            @Sendable (borrowing Server.Listener) async throws(Server.Error) -> Server.Connection
+        let accept: @Sendable (borrowing Server.Listener) async throws(Server.Error) -> Server.Connection
         let close: @Sendable (consuming Server.Listener) async -> Void
     }
 }

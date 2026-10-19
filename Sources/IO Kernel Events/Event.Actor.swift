@@ -169,11 +169,10 @@
                 }
             }
 
-            var descriptorOpt: Kernel.Descriptor? = consume duped
             let id: Event.ID
             do throws(Kernel.Event.Driver.Error) {
                 id = try polling.source.register(
-                    descriptor: descriptorOpt.take()!,
+                    descriptor: consume duped,
                     interest: [.read, .write]
                 )
             } catch {

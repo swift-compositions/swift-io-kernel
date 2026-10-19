@@ -41,12 +41,18 @@ extension Completion {
 extension Completion.Entry {
 
     public consuming func resolve(with event: Kernel.Completion.Event) {
-        _continuation!.resume(returning: event)
+        guard let continuation = _continuation else {
+            preconditionFailure("Completion.Entry holds its continuation until it is resolved")
+        }
+        continuation.resume(returning: event)
         _continuation = nil
     }
 
     public consuming func resolveAsCancelled() {
-        _continuation!.resume(returning: nil)
+        guard let continuation = _continuation else {
+            preconditionFailure("Completion.Entry holds its continuation until it is resolved")
+        }
+        continuation.resume(returning: nil)
         _continuation = nil
     }
 }

@@ -56,6 +56,9 @@
 
     extension Completion.Actor {
 
+        // REASON: Dictionary::Dictionary is the ecosystem dictionary, which stores ~Copyable values;
+        // the shorthand [K: V] means Swift.Dictionary, which cannot hold a Completion.Entry.
+        // swift-format-ignore: UseShorthandTypeNames
         private typealias Registry = Dictionary::Dictionary<
             Kernel.Completion.Token, Completion.Entry
         >

@@ -20,7 +20,10 @@
                 throw error.completionFailure
             }
 
-            let address = unsafe Memory.Address(raw.baseAddress!)
+            guard let base = raw.baseAddress else {
+                preconditionFailure("a non-null span base has an address")
+            }
+            let address = unsafe Memory.Address(base)
             let length: Memory.Address.Count = buffer.count.retag(Memory.self)
 
             return try await submit(
@@ -28,7 +31,10 @@
                 descriptor: consume descriptor
             ) { event throws(Completion.Failure) in
                 if let error = event.result.failure { throw error.completionFailure }
-                return Int(event.result.value!)
+                guard let value = event.result.value else {
+                    preconditionFailure("a completion without a failure carries a value")
+                }
+                return Int(value)
             }
         }
 
@@ -45,7 +51,10 @@
                 throw error.completionFailure
             }
 
-            let address = unsafe Memory.Address(raw.baseAddress!)
+            guard let base = raw.baseAddress else {
+                preconditionFailure("a non-null span base has an address")
+            }
+            let address = unsafe Memory.Address(base)
             let length: Memory.Address.Count = buffer.count.retag(Memory.self)
 
             return try await submit(
@@ -53,7 +62,10 @@
                 descriptor: consume descriptor
             ) { event throws(Completion.Failure) in
                 if let error = event.result.failure { throw error.completionFailure }
-                return Int(event.result.value!)
+                guard let value = event.result.value else {
+                    preconditionFailure("a completion without a failure carries a value")
+                }
+                return Int(value)
             }
         }
 
