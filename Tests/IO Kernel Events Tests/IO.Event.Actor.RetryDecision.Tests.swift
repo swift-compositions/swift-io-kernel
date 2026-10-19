@@ -1,58 +1,61 @@
-import Kernel
-import Testing
+#if !os(Windows)
+    import Kernel
+    import Testing
 
-@testable import IO_Kernel_Events
+    @testable import IO_Kernel_Events
 
-extension Event.Actor.RetryDecision {
-    @Suite
-    struct `Test` {
-        @Suite struct `Unit` {}
-    }
-}
-
-extension Event.Actor.RetryDecision.Test.Unit {
-
-    @Test
-    func `EINTR is classified as retry`() {
-        let decision = Event.Actor.RetryDecision(
-            for: .platform(.EINTR)
-        )
-        #expect(decision == .retry)
+    extension Event.Actor.RetryDecision {
+        @Suite
+        struct `Test` {
+            @Suite struct `Unit` {}
+        }
     }
 
-    @Test
-    func `ENOMEM yields before retry`() {
-        let decision = Event.Actor.RetryDecision(
-            for: .platform(.ENOMEM)
-        )
-        #expect(decision == .yieldAndRetry)
+    extension Event.Actor.RetryDecision.Test.Unit {
+
+        @Test
+        func `EINTR is classified as retry`() {
+            let decision = Event.Actor.RetryDecision(
+                for: .platform(.EINTR)
+            )
+            #expect(decision == .retry)
+        }
+
+        @Test
+        func `ENOMEM yields before retry`() {
+            let decision = Event.Actor.RetryDecision(
+                for: .platform(.ENOMEM)
+            )
+            #expect(decision == .yieldAndRetry)
+        }
+
+        @Test
+        func `EAGAIN is classified as retry`() {
+            let decision = Event.Actor.RetryDecision(
+                for: .platform(.EAGAIN)
+            )
+            #expect(decision == .retry)
+        }
+
+        @Test
+        func `Unknown platform code halts`() {
+            let decision = Event.Actor.RetryDecision(
+                for: .platform(.posix(Int32(62)))
+            )
+            #expect(decision == .halt)
+        }
+
+        @Test
+        func `invalidDescriptor halts`() {
+            let decision = Event.Actor.RetryDecision(for: .invalidDescriptor)
+            #expect(decision == .halt)
+        }
+
+        @Test
+        func `notRegistered halts`() {
+            let decision = Event.Actor.RetryDecision(for: .notRegistered)
+            #expect(decision == .halt)
+        }
     }
 
-    @Test
-    func `EAGAIN is classified as retry`() {
-        let decision = Event.Actor.RetryDecision(
-            for: .platform(.EAGAIN)
-        )
-        #expect(decision == .retry)
-    }
-
-    @Test
-    func `Unknown platform code halts`() {
-        let decision = Event.Actor.RetryDecision(
-            for: .platform(.posix(Int32(62)))
-        )
-        #expect(decision == .halt)
-    }
-
-    @Test
-    func `invalidDescriptor halts`() {
-        let decision = Event.Actor.RetryDecision(for: .invalidDescriptor)
-        #expect(decision == .halt)
-    }
-
-    @Test
-    func `notRegistered halts`() {
-        let decision = Event.Actor.RetryDecision(for: .notRegistered)
-        #expect(decision == .halt)
-    }
-}
+#endif
