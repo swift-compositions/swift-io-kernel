@@ -237,7 +237,7 @@
                 return count
             }
             if let pollError { throw pollError }
-            if idle { System.sleep(.milliseconds(1)) }
+            if idle { Kernel.Thread.sleep(.milliseconds(1)) }
             return count
         }
 
