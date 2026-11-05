@@ -250,7 +250,8 @@ let package = Package(
                 .product(name: "Span", package: "swift-span"),
             ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
