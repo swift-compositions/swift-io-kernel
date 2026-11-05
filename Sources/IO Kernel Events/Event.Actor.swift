@@ -207,7 +207,7 @@
         ) async throws(Event.Failure) {
 
             guard state == .running else { throw .left(.shutdown) }
-            var channel = Async.Channel<Kernel.Event>.Unbounded()
+            let channel = Async.Channel<Kernel.Event>.Unbounded()
             let sender = channel.sender
             registrations[registrationID]?.senders.append(sender, for: interest)
 

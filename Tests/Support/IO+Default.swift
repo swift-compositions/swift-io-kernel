@@ -1,4 +1,4 @@
-public import Kernel
+import Kernel
 
 extension IO where Capabilities == Basic.Capabilities {
 

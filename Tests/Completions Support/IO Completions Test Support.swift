@@ -2,7 +2,7 @@
 
     @_spi(Syscall) public import Kernel_Completion
     public import IO_Kernel_Test_Support
-    public import IO_Kernel_Events
+    import IO_Kernel_Events
     import Synchronizer_Blocking
 
     extension IO where Capabilities == Basic.Capabilities {

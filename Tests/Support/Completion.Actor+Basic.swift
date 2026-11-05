@@ -2,7 +2,7 @@
 
     public import IO_Kernel
     public import Kernel
-    public import Memory
+    import Memory
     public import Span
 
     extension Completion.Actor {
