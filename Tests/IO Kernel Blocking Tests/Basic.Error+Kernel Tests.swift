@@ -1,13 +1,15 @@
 import IO_Kernel_Test_Support
 import Testing
 
-extension Basic.Error {
+enum `Basic.Error Tests` {}
+
+extension `Basic.Error Tests` {
     @Suite struct `Test` {
         @Suite struct `Unit` {}
     }
 }
 
-extension Basic.Error.Test.Unit {
+extension `Basic.Error Tests`.`Test`.Unit {
     @Test
     func `broken pipe kernel errors map to the domain error`() {
         #if os(Windows)

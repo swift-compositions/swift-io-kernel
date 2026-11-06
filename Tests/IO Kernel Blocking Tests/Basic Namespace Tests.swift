@@ -1,7 +1,9 @@
 import IO_Kernel_Test_Support
 import Testing
 
-extension Basic {
+enum `Basic Tests` {}
+
+extension `Basic Tests` {
     @Suite(.timeLimit(.minutes(1)))
     struct `Test` {
         @Suite struct `Unit` {}
@@ -11,7 +13,7 @@ extension Basic {
     }
 }
 
-extension Basic.Test.Unit {
+extension `Basic Tests`.`Test`.Unit {
     @Test
     func `Basic namespace exists`() {
 
