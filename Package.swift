@@ -182,8 +182,8 @@ let package = Package(
         .target(
             name: "IO Kernel",
             dependencies: [
-                "IO Kernel Events",
-                "IO Kernel Completions",
+                .target(name: "IO Kernel Events"),
+                .target(name: "IO Kernel Completions"),
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "IO", package: "swift-io"),
                 .product(name: "Either", package: "swift-either"),
@@ -193,7 +193,7 @@ let package = Package(
         .target(
             name: "IO Kernel Test Support",
             dependencies: [
-                "IO Kernel",
+                .target(name: "IO Kernel"),
                 .product(name: "Kernel", package: "swift-kernel"),
                 .product(name: "Kernel Test Support", package: "swift-kernel"),
                 .product(name: "IO", package: "swift-io"),
@@ -209,9 +209,9 @@ let package = Package(
         .target(
             name: "IO Kernel Completions Test Support",
             dependencies: [
-                "IO Kernel Completions",
-                "IO Kernel Events",
-                "IO Kernel Test Support",
+                .target(name: "IO Kernel Completions"),
+                .target(name: "IO Kernel Events"),
+                .target(name: "IO Kernel Test Support"),
                 .product(name: "Synchronizer Blocking", package: "swift-synchronizers"),
             ],
             path: "Tests/Completions Support"
@@ -220,7 +220,7 @@ let package = Package(
         .testTarget(
             name: "IO Kernel Blocking Tests",
             dependencies: [
-                "IO Kernel Test Support",
+                .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
             ],
             path: "Tests/IO Kernel Blocking Tests"
@@ -228,16 +228,16 @@ let package = Package(
         .testTarget(
             name: "IO Kernel Completions Tests",
             dependencies: [
-                "IO Kernel Completions",
-                "IO Kernel Completions Test Support",
+                .target(name: "IO Kernel Completions"),
+                .target(name: "IO Kernel Completions Test Support"),
                 .product(name: "Span", package: "swift-span"),
             ]
         ),
         .testTarget(
             name: "IO Kernel Tests",
             dependencies: [
-                "IO Kernel",
-                "IO Kernel Test Support",
+                .target(name: "IO Kernel"),
+                .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
             ]
         ),
@@ -245,8 +245,8 @@ let package = Package(
             name: "IO Kernel Events Tests",
             dependencies: [
                 .product(name: "Async Channel", package: "swift-async-channel"),
-                "IO Kernel Events",
-                "IO Kernel Test Support",
+                .target(name: "IO Kernel Events"),
+                .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
             ]
         ),
