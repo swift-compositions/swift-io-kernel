@@ -11,7 +11,7 @@ struct `IO blocking run tests` {
         let pipe = try Kernel.Pipe.pipe()
 
         let message: [UInt8] = [72, 101, 108, 108, 111]
-        let writePtr = unsafe UnsafeMutableRawBufferPointer.allocate(
+        let writePtr = UnsafeMutableRawBufferPointer.allocate(
             byteCount: message.count,
             alignment: 1
         )
@@ -19,7 +19,7 @@ struct `IO blocking run tests` {
         unsafe writePtr.copyBytes(from: message)
         let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
 
-        let readPtr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
+        let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
         defer { unsafe readPtr.deallocate() }
         let readBuffer: Span.Raw.Mutable = unsafe .init(readPtr)
 
@@ -42,7 +42,7 @@ struct `IO blocking run tests` {
                     let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
-                    let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
+                    let ptr = UnsafeMutableRawBufferPointer.allocate(
                         byteCount: 1,
                         alignment: 1
                     )
@@ -69,7 +69,7 @@ struct `IO blocking run tests` {
                     let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
-                    let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
+                    let ptr = UnsafeMutableRawBufferPointer.allocate(
                         byteCount: 1,
                         alignment: 1
                     )
@@ -95,7 +95,7 @@ struct `IO blocking run tests` {
     @Test
     func `errors propagate from closure through witness to caller`() async throws {
         let io = IO.blocking()
-        let readPtr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
+        let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
         defer { unsafe readPtr.deallocate() }
         let readBuf: Span.Raw.Mutable = unsafe .init(readPtr)
 
@@ -111,7 +111,7 @@ struct `IO blocking run tests` {
         let io = IO.blocking()
 
         let pipe = try Kernel.Pipe.pipe()
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)

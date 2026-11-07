@@ -22,7 +22,7 @@ extension Basic.BindingTest.`Mandatory Binding` {
         let io = IO.blocking()
         let pipe = try Kernel.Pipe.pipe()
 
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
         let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
@@ -49,7 +49,7 @@ extension Basic.BindingTest.`Mandatory Binding` {
                     let io = IO.blocking()
                     let pipe = try Kernel.Pipe.pipe()
 
-                    let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(
+                    let ptr = UnsafeMutableRawBufferPointer.allocate(
                         byteCount: 1,
                         alignment: 1
                     )
@@ -127,7 +127,7 @@ extension Basic.BindingTest.`Shared Executor` {
         let ioB = makeProbedIO(on: executor, recorder: recorder)
 
         let pipe = try Kernel.Pipe.pipe()
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 11
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
@@ -159,7 +159,7 @@ extension Basic.BindingTest.`Shared Executor` {
 
         let pipeA = try Kernel.Pipe.pipe()
         let pipeB = try Kernel.Pipe.pipe()
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 22
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
@@ -201,7 +201,7 @@ extension SharedExecutorApp {
         readFd: borrowing Kernel.Descriptor,
         value: UInt8
     ) async throws(Basic.Error) -> UInt8 {
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = value
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
@@ -234,7 +234,7 @@ extension Basic.BindingTest.`Zero Hop` {
         #expect(got == 42)
 
         let pipe2 = try Kernel.Pipe.pipe()
-        let ptr = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe ptr.deallocate() }
         unsafe ptr[0] = 1
         let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
@@ -259,7 +259,7 @@ extension Basic.BindingTest.`Head Of Line` {
         let pipeA = try Kernel.Pipe.pipe()
         let pipeB = try Kernel.Pipe.pipe()
 
-        let oneByte = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let oneByte = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe oneByte.deallocate() }
         unsafe oneByte[0] = 99
         let oneByteBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(oneByte))
@@ -272,9 +272,9 @@ extension Basic.BindingTest.`Head Of Line` {
         }
 
         let order = OrderCounter()
-        let bufA = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let bufA = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe bufA.deallocate() }
-        let bufB = unsafe UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+        let bufB = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
         defer { unsafe bufB.deallocate() }
         let readBufA: Span.Raw.Mutable = unsafe .init(bufA)
         let readBufB: Span.Raw.Mutable = unsafe .init(bufB)
