@@ -12,7 +12,6 @@ import Testing
     )
 )
 private struct `Test` {
-
     @Test
     func `IO.default() returns an IO with a non-default executor`() async throws {
         let io = IO.default()
@@ -54,7 +53,7 @@ private struct `Test` {
         )
         #expect(n == payload.count)
         var received: [UInt8] = []
-        for i in 0..<n { received.append(unsafe readPtr[i]) }
+        (0..<n).forEach { i in received.append(unsafe readPtr[i]) }
         #expect(received == payload)
     }
 }

@@ -14,9 +14,7 @@
             )
         )
         struct Witness {
-
             @Suite struct `Integration` {
-
                 @Test func `pipe read/write round-trip`() async throws {
                     let io = try IO.completionsTest()
                     let pipe = try Kernel.Pipe.pipe()
@@ -46,7 +44,7 @@
                     #expect(n == payload.count)
 
                     var received: [UInt8] = []
-                    for i in 0..<n { received.append(unsafe readPtr[i]) }
+                    (0..<n).forEach { i in received.append(unsafe readPtr[i]) }
                     #expect(received == payload)
                 }
 
@@ -121,7 +119,6 @@
             }
 
             @Suite struct `Cancel Handshake` {
-
                 @Test(.timeLimit(.minutes(1)))
                 func `read returns only after original and cancel CQEs`() async throws {
                     let (actor, backend) = Completion.Actor.fake()

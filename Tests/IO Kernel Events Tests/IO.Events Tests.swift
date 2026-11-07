@@ -17,7 +17,6 @@
     }
 
     extension Event.Actor.Test {
-
         @Test
         func `pipe round-trip: write then read returns the bytes written`() async throws {
             let actor = try Event.Actor()
@@ -49,13 +48,12 @@
 
             #expect(n == payload.count)
             var received: [UInt8] = []
-            for i in 0..<n { received.append(unsafe readPtr[i]) }
+            (0..<n).forEach { i in received.append(unsafe readPtr[i]) }
             #expect(received == payload)
         }
     }
 
     extension Event.Actor.Test {
-
         @Test
         func `ready on a pipe write-end returns immediately when writable`() async throws {
             let actor = try Event.Actor()
@@ -106,7 +104,6 @@
     }
 
     extension Event.Actor.Test {
-
         @Test
         func `IO.events witness carries a non-default unownedExecutor`() async throws {
             let actor = try Event.Actor()
