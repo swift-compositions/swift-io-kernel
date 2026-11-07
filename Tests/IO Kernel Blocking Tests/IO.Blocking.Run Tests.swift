@@ -3,125 +3,129 @@ import Memory
 import Span
 import Testing
 
-@Suite(.timeLimit(.minutes(1)))
-struct `IO blocking run tests` {
-    @Test
-    func `read/write through pipe`() async throws {
-        let io = IO.blocking()
-        let pipe = try Kernel.Pipe.pipe()
+enum `IO.Blocking.Run Tests` {}
 
-        let message: [UInt8] = [72, 101, 108, 108, 111]
-        let writePtr = UnsafeMutableRawBufferPointer.allocate(
-            byteCount: message.count,
-            alignment: 1
-        )
-        defer { unsafe writePtr.deallocate() }
-        unsafe writePtr.copyBytes(from: message)
-        let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
+extension `IO.Blocking.Run Tests` {
+    @Suite(.timeLimit(.minutes(1)))
+    struct `IO blocking run tests` {
+        @Test
+        func `read/write through pipe`() async throws {
+            let io = IO.blocking()
+            let pipe = try Kernel.Pipe.pipe()
 
-        let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
-        defer { unsafe readPtr.deallocate() }
-        let readBuffer: Span.Raw.Mutable = unsafe .init(readPtr)
+            let message: [UInt8] = [72, 101, 108, 108, 111]
+            let writePtr = UnsafeMutableRawBufferPointer.allocate(
+                byteCount: message.count,
+                alignment: 1
+            )
+            defer { unsafe writePtr.deallocate() }
+            unsafe writePtr.copyBytes(from: message)
+            let writeBuffer: Span.Raw = unsafe .init(UnsafeRawBufferPointer(writePtr))
 
-        let written = unsafe try await io.write(to: pipe.write, from: writeBuffer)
-        #expect(written == 5)
+            let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
+            defer { unsafe readPtr.deallocate() }
+            let readBuffer: Span.Raw.Mutable = unsafe .init(readPtr)
 
-        let bytesRead = unsafe try await io.read(from: pipe.read, into: readBuffer)
-        #expect(bytesRead == 5)
+            let written = unsafe try await io.write(to: pipe.write, from: writeBuffer)
+            #expect(written == 5)
 
-        let result = unsafe Array(UnsafeRawBufferPointer(readPtr).prefix(5))
-        #expect(result == message)
-    }
+            let bytesRead = unsafe try await io.read(from: pipe.read, into: readBuffer)
+            #expect(bytesRead == 5)
 
-    @Test
-    func `concurrent blocking calls complete — proves dedicated threads`() async throws {
-        let count = 16
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            for _ in 0..<count {
-                group.addTask {
-                    let io = IO.blocking()
-                    let pipe = try Kernel.Pipe.pipe()
+            let result = unsafe Array(UnsafeRawBufferPointer(readPtr).prefix(5))
+            #expect(result == message)
+        }
 
-                    let ptr = UnsafeMutableRawBufferPointer.allocate(
-                        byteCount: 1,
-                        alignment: 1
-                    )
-                    defer { unsafe ptr.deallocate() }
-                    unsafe ptr[0] = 42
-                    let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
-                    let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
+        @Test
+        func `concurrent blocking calls complete — proves dedicated threads`() async throws {
+            let count = 16
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                for _ in 0..<count {
+                    group.addTask {
+                        let io = IO.blocking()
+                        let pipe = try Kernel.Pipe.pipe()
 
-                    _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
-                    _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+                        let ptr = UnsafeMutableRawBufferPointer.allocate(
+                            byteCount: 1,
+                            alignment: 1
+                        )
+                        defer { unsafe ptr.deallocate() }
+                        unsafe ptr[0] = 42
+                        let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
+                        let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
+
+                        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+                        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+                    }
                 }
+                try await group.waitForAll()
             }
-            try await group.waitForAll()
         }
-    }
 
-    @Test
-    func `await between I/O calls — actor isolation keeps ops on executor`() async throws {
+        @Test
+        func `await between I/O calls — actor isolation keeps ops on executor`() async throws {
 
-        let count = 16
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            for _ in 0..<count {
-                group.addTask {
-                    let io = IO.blocking()
-                    let pipe = try Kernel.Pipe.pipe()
+            let count = 16
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                for _ in 0..<count {
+                    group.addTask {
+                        let io = IO.blocking()
+                        let pipe = try Kernel.Pipe.pipe()
 
-                    let ptr = UnsafeMutableRawBufferPointer.allocate(
-                        byteCount: 1,
-                        alignment: 1
-                    )
-                    defer { unsafe ptr.deallocate() }
-                    unsafe ptr[0] = 1
-                    let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
-                    let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
+                        let ptr = UnsafeMutableRawBufferPointer.allocate(
+                            byteCount: 1,
+                            alignment: 1
+                        )
+                        defer { unsafe ptr.deallocate() }
+                        unsafe ptr[0] = 1
+                        let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
+                        let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-                    _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
-                    _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+                        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+                        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
 
-                    await Task.yield()
+                        await Task.yield()
 
-                    unsafe ptr[0] = 2
-                    _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
-                    _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+                        unsafe ptr[0] = 2
+                        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+                        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+                    }
                 }
+                try await group.waitForAll()
             }
-            try await group.waitForAll()
         }
-    }
 
-    @Test
-    func `errors propagate from closure through witness to caller`() async throws {
-        let io = IO.blocking()
-        let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
-        defer { unsafe readPtr.deallocate() }
-        let readBuf: Span.Raw.Mutable = unsafe .init(readPtr)
+        @Test
+        func `errors propagate from closure through witness to caller`() async throws {
+            let io = IO.blocking()
+            let readPtr = UnsafeMutableRawBufferPointer.allocate(byteCount: 16, alignment: 1)
+            defer { unsafe readPtr.deallocate() }
+            let readBuf: Span.Raw.Mutable = unsafe .init(readPtr)
 
-        let invalid = Kernel.Descriptor.invalid
+            let invalid = Kernel.Descriptor.invalid
 
-        await #expect(throws: Basic.Error.self) {
-            _ = try await io.read(from: invalid, into: readBuf)
+            await #expect(throws: Basic.Error.self) {
+                _ = try await io.read(from: invalid, into: readBuf)
+            }
         }
-    }
 
-    @Test
-    func `IO instance is reusable across multiple calls`() async throws {
-        let io = IO.blocking()
+        @Test
+        func `IO instance is reusable across multiple calls`() async throws {
+            let io = IO.blocking()
 
-        let pipe = try Kernel.Pipe.pipe()
-        let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
-        defer { unsafe ptr.deallocate() }
-        let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
-        let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
+            let pipe = try Kernel.Pipe.pipe()
+            let ptr = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: 1)
+            defer { unsafe ptr.deallocate() }
+            let writeBuf: Span.Raw = unsafe .init(UnsafeRawBufferPointer(ptr))
+            let readBuf: Span.Raw.Mutable = unsafe .init(ptr)
 
-        unsafe ptr[0] = 1
-        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
-        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+            unsafe ptr[0] = 1
+            _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+            _ = unsafe try await io.read(from: pipe.read, into: readBuf)
 
-        unsafe ptr[0] = 2
-        _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
-        _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+            unsafe ptr[0] = 2
+            _ = unsafe try await io.write(to: pipe.write, from: writeBuf)
+            _ = unsafe try await io.read(from: pipe.read, into: readBuf)
+        }
     }
 }
