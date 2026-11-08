@@ -2,3 +2,4 @@
 @_exported public import Kernel
 @_exported public import Memory
 @_exported public import Synchronization
+@_exported public import Kernel_Completion
