@@ -7,7 +7,7 @@ import Synchronization
 import Testing
 
 extension Basic {
-    enum BindingTest {
+    fileprivate enum BindingTest {
         @Suite struct `Mandatory Binding` {}
         @Suite struct `Shared Executor` {}
         @Suite struct `Zero Hop` {}
@@ -181,7 +181,7 @@ extension Basic.BindingTest.`Shared Executor` {
     }
 }
 
-actor SharedExecutorApp {
+fileprivate actor SharedExecutorApp {
     let executor: Kernel.Thread.Executor
     let io: IO<Basic.Capabilities>
 
