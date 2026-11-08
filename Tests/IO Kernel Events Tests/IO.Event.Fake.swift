@@ -232,7 +232,7 @@
                 let events = state.pendingEvents
                 state.pendingEvents = []
                 let count = min(events.count, buffer.count)
-                for i in 0..<count { buffer[i] = events[i] }
+                (0..<count).forEach { i in buffer[i] = events[i] }
                 idle = count == 0
                 return count
             }
