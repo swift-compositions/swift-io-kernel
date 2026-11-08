@@ -7,9 +7,9 @@
     import Memory
     import Span
 
-enum `IO.Completion.Actor Tests` {}
+    enum `IO.Completion.Actor Tests` {}
 
-extension `IO.Completion.Actor Tests` {
+    extension `IO.Completion.Actor Tests` {
         @Suite struct `Proactor tests` {
             @Suite(
                 .disabled(
@@ -108,6 +108,6 @@ extension `IO.Completion.Actor Tests` {
                 }
             }
         }
-}
+    }
 
 #endif

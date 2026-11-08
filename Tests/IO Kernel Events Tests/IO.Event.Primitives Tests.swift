@@ -4,9 +4,9 @@
     import Kernel
     import Testing
 
-enum `IO.Event.Primitives Tests` {}
+    enum `IO.Event.Primitives Tests` {}
 
-extension `IO.Event.Primitives Tests` {
+    extension `IO.Event.Primitives Tests` {
         @Suite(.timeLimit(.minutes(1)))
         struct `Event Primitives` {
 
@@ -75,6 +75,6 @@ extension `IO.Event.Primitives Tests` {
                 #expect(writeClosed.description.contains("closed"))
             }
         }
-}
+    }
 
 #endif
