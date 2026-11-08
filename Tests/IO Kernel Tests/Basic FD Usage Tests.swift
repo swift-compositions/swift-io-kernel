@@ -33,7 +33,7 @@ extension BasicFD {
 
 extension BasicFD {
 
-    @Suite("Basic FD Usage (swift-io)")
+    @Suite
     struct `Test` {
         @Suite struct `Unit` {}
         @Suite struct `Edge Case` {}

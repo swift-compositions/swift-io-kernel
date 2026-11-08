@@ -35,7 +35,7 @@ extension Server {
 
 extension Server {
 
-    @Suite("Server Usage (swift-server)")
+    @Suite
     struct `Test` {
         @Suite struct `Unit` {}
         @Suite struct `Edge Case` {}

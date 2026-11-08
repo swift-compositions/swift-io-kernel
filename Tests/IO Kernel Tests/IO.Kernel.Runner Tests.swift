@@ -1,7 +1,7 @@
 import IO_Kernel_Test_Support
 import Testing
 
-@Suite("IO.Runner")
+@Suite
 private struct `Test` {
     @Suite struct `Unit` {}
     @Suite struct `Edge Case` {}

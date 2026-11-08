@@ -45,7 +45,7 @@ extension File {
 
 extension File {
 
-    @Suite("File System Usage (swift-file-system)")
+    @Suite
     struct `Test` {
         @Suite struct `Unit` {}
         @Suite struct `Edge Case` {}

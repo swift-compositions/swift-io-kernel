@@ -35,7 +35,7 @@ extension Socket {
 
 extension Socket {
 
-    @Suite("Socket Usage (swift-sockets)")
+    @Suite
     struct `Test` {
         @Suite struct `Unit` {}
         @Suite struct `Edge Case` {}
