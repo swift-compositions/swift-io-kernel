@@ -202,6 +202,9 @@ let package = Package(
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(name: "Span", package: "swift-span"),
+                .target(name: "IO Kernel Completions"),
+                .target(name: "IO Kernel Events"),
+                .product(name: "Kernel Completion", package: "swift-kernel"),
             ],
             path: "Tests/Support"
         ),
@@ -213,6 +216,7 @@ let package = Package(
                 .target(name: "IO Kernel Events"),
                 .target(name: "IO Kernel Test Support"),
                 .product(name: "Synchronizer Blocking", package: "swift-synchronizers"),
+                .product(name: "Kernel Completion", package: "swift-kernel"),
             ],
             path: "Tests/Completions Support"
         ),
@@ -222,6 +226,9 @@ let package = Package(
             dependencies: [
                 .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
+                .product(name: "Executors", package: "swift-executors"),
+                .product(name: "Kernel", package: "swift-kernel"),
+                .product(name: "Memory", package: "swift-memory"),
             ],
             path: "Tests/IO Kernel Blocking Tests"
         ),
@@ -231,6 +238,9 @@ let package = Package(
                 .target(name: "IO Kernel Completions"),
                 .target(name: "IO Kernel Completions Test Support"),
                 .product(name: "Span", package: "swift-span"),
+                .product(name: "Kernel", package: "swift-kernel"),
+                .product(name: "Kernel Completion", package: "swift-kernel"),
+                .product(name: "Memory", package: "swift-memory"),
             ]
         ),
         .testTarget(
@@ -239,6 +249,8 @@ let package = Package(
                 .target(name: "IO Kernel"),
                 .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
+                .product(name: "Kernel", package: "swift-kernel"),
+                .product(name: "Memory", package: "swift-memory"),
             ]
         ),
         .testTarget(
@@ -248,6 +260,8 @@ let package = Package(
                 .target(name: "IO Kernel Events"),
                 .target(name: "IO Kernel Test Support"),
                 .product(name: "Span", package: "swift-span"),
+                .product(name: "Kernel", package: "swift-kernel"),
+                .product(name: "Memory", package: "swift-memory"),
             ]
         ),
     ],
